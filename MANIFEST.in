@@ -1,0 +1,4 @@
+include LICENCE.txt
+include README.rst
+recursive-include tests *
+recursive-exclude * .DS_Store 

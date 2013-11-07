@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from requests.packages.urllib3.exceptions import LocationParseError
 from StringIO import StringIO
@@ -69,7 +70,12 @@ class ThumborStorage(Storage):
         pass
 
     def exists(self, name):
-        return thumbor_original_exists(self.url(name))
+        # name is the location returned by Thumbor when posted > may exists.
+        if re.match(r"^/image/\w{32}/.*$", name):
+            return thumbor_original_exists(thumbor_image_url(name))
+        # name as defined in 'upload_to' > new image.
+        else:
+            return False
 
     def size(self, name):
         pass

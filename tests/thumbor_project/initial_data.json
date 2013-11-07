@@ -107,6 +107,39 @@
 },
 {
   "pk": 1, 
+  "model": "my_app.person", 
+  "fields": {
+    "photo": "people/HannibalSmith.jpg", 
+    "first_name": "Hannibal", 
+    "last_name": "Smith", 
+    "photo_width": 300, 
+    "photo_height": 220
+  }
+},
+{
+  "pk": 2, 
+  "model": "my_app.person", 
+  "fields": {
+    "photo": "/image/b2569706e1504f24ac5686aeefbec1cd/people/BABaracus.jpg", 
+    "first_name": "Bosco Albert", 
+    "last_name": "Baracus", 
+    "photo_width": 300, 
+    "photo_height": 220
+  }
+},
+{
+  "pk": 1, 
+  "model": "my_app.personnew", 
+  "fields": {
+    "photo": "/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg", 
+    "first_name": "Templeton", 
+    "last_name": "Peck", 
+    "photo_width": 300, 
+    "photo_height": 220
+  }
+},
+{
+  "pk": 1, 
   "model": "my_app.personfilesystem", 
   "fields": {
     "photo": "people/fs/ChuckNorris.jpg", 
@@ -527,6 +560,96 @@
     "content_type": [
       "my_app", 
       "personfilesystem"
+    ]
+  }
+},
+{
+  "pk": 3, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 1, 
+    "action_time": "2013-11-07T10:51:58.169Z", 
+    "object_repr": "Hannibal Smith", 
+    "object_id": "1", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "person"
+    ]
+  }
+},
+{
+  "pk": 4, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 1, 
+    "action_time": "2013-11-07T10:55:43.144Z", 
+    "object_repr": "Templeton Peck", 
+    "object_id": "1", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "personnew"
+    ]
+  }
+},
+{
+  "pk": 5, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 1, 
+    "action_time": "2013-11-07T14:39:08.498Z", 
+    "object_repr": "Templeton Peck2", 
+    "object_id": "2", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "personnew"
+    ]
+  }
+},
+{
+  "pk": 6, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 1, 
+    "action_time": "2013-11-07T14:59:47.258Z", 
+    "object_repr": "Bosco Albert Baracus", 
+    "object_id": "2", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "person"
+    ]
+  }
+},
+{
+  "pk": 7, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 3, 
+    "action_time": "2013-11-07T15:07:16.467Z", 
+    "object_repr": "Templeton Peck2", 
+    "object_id": "2", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "personnew"
     ]
   }
 }

@@ -1,5 +1,6 @@
 import os
 import requests
+from requests.packages.urllib3.exceptions import LocationParseError
 from StringIO import StringIO
 from django.conf import settings
 from django.core.files.images import ImageFile
@@ -68,8 +69,7 @@ class ThumborStorage(Storage):
         pass
 
     def exists(self, name):
-        pass
-        # https://docs.djangoproject.com/en/1.5/ref/files/storage/#django.core.files.storage.Storage.exists
+        return thumbor_original_exists(self.url(name))
 
     def size(self, name):
         pass
@@ -84,7 +84,7 @@ class ThumborStorage(Storage):
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     """A Storage that fallback on the FileSystemStorage.
     
-    Useful for a parallel run strategy.
+    Useful for a parallel run migration strategy.
 
     The use case is :
         1. Your project started with a FileSystemStorage ;
@@ -95,4 +95,34 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         1. Store the new images on Thumbor ;
         2. continue to serve existing ones from the file system.
     """
-    pass
+
+    def __init__(self, **kwargs): # options=None, location=None, base_url=None, file_permissions_mode=None):
+        options = kwargs.get("options", None)
+        location = kwargs.get("location", None)
+        base_url = kwargs.get("base_url", None)
+        # TODO if django >= 1.6: file_permissions_mode
+        ThumborStorage.__init__(self, options)
+        FileSystemStorage.__init__(self, location=location, base_url=base_url)
+
+    def url(self, name):
+        # Not DRY but ThumborStorage.exists() calls self.url() > infinite loop.
+        thumbor_url = ThumborStorage.url(self, name)
+        if thumbor_original_exists(thumbor_url):
+            return thumbor_url
+        else:
+            return FileSystemStorage.url(self, name)
+
+
+def thumbor_original_exists(url):
+    # May be cool to be able to check if the image exists on Thumbor server
+    # *without* having to retrieve it.
+    try:
+        response = requests.get(url)
+    # Happens when trying to get an image when the name in db 
+    # is in a FileSystemStorage form (without the '/' at the beginning).
+    except LocationParseError:
+        return False
+    if response.status_code == 200:
+        return True
+    else:
+        return False

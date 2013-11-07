@@ -1,4 +1,9 @@
 *.log
 *.pot
 *.pyc
+*.swp
 local_settings.py
+.DS_Store
+dist
+build
+MANIFEST

@@ -95,7 +95,7 @@ class ThumborStorage(Storage):
 
 
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
-    """A Storage that fallback on the FileSystemStorage.
+    """A Storage that fallback on the FileSystemStorage when retrieving the image.
     
     Useful for a parallel run migration strategy.
 
@@ -109,7 +109,7 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         2. continue to serve existing ones from the file system.
     """
 
-    def __init__(self, **kwargs): # options=None, location=None, base_url=None, file_permissions_mode=None):
+    def __init__(self, **kwargs):
         options = kwargs.get("options", None)
         location = kwargs.get("location", None)
         base_url = kwargs.get("base_url", None)
@@ -118,13 +118,15 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         FileSystemStorage.__init__(self, location=location, base_url=base_url)
 
     def url(self, name):
-        # Not DRY but ThumborStorage.exists() calls self.url() > infinite loop.
-        thumbor_url = ThumborStorage.url(self, name)
-        if thumbor_original_exists(thumbor_url):
-            return thumbor_url
+        if re.match(r"^/image/\w{32}/.*$", name):
+            return ThumborStorage.url(self, name)
         else:
             return FileSystemStorage.url(self, name)
 
+
+## These functions because some methods in ThumborStorage may be called with
+#   self being a ThumborMigrationStorage instance and result in infinite loop.
+# These methods proxiing to these functions.
 
 def thumbor_original_exists(url):
     # May be cool to be able to check if the image exists on Thumbor server

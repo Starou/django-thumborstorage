@@ -82,7 +82,14 @@ class ThumborStorage(Storage):
         # https://docs.djangoproject.com/en/1.5/ref/files/storage/#django.core.files.storage.Storage.size
 
     def url(self, name):
-        return "%s%s" % (settings.THUMBOR_SERVER, name)
+        return thumbor_image_url(name)
+
+    def get_available_name(self, name):
+        # There is no way to know if the image exists on Thumbor.
+        # When posting a new original image, Thumbor generate a ramdom id as key.
+        # https://github.com/globocom/thumbor/blob/ae9a150e8a2b771dd49b4137186e9fdfbea09733/thumbor/handlers/images.py#L51
+        return name
+
 
     #TODO : get_valid_name(name) et get_available_name(name).
 
@@ -132,3 +139,7 @@ def thumbor_original_exists(url):
         return True
     else:
         return False
+
+
+def thumbor_image_url(name):
+    return "%s%s" % (settings.THUMBOR_SERVER, name)

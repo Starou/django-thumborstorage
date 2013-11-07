@@ -7,3 +7,4 @@ local_settings.py
 dist
 build
 MANIFEST
+*.sqlite

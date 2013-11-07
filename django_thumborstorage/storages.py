@@ -90,8 +90,7 @@ class ThumborStorage(Storage):
         # https://github.com/globocom/thumbor/blob/ae9a150e8a2b771dd49b4137186e9fdfbea09733/thumbor/handlers/images.py#L51
         return name
 
-
-    #TODO : get_valid_name(name) et get_available_name(name).
+    #TODO : get_valid_name(name)
 
 
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):

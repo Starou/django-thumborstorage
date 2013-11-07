@@ -1,0 +1,533 @@
+[
+{
+  "pk": 1, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "permission", 
+    "name": "permission", 
+    "app_label": "auth"
+  }
+},
+{
+  "pk": 2, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "group", 
+    "name": "group", 
+    "app_label": "auth"
+  }
+},
+{
+  "pk": 3, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "user", 
+    "name": "user", 
+    "app_label": "auth"
+  }
+},
+{
+  "pk": 4, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "contenttype", 
+    "name": "content type", 
+    "app_label": "contenttypes"
+  }
+},
+{
+  "pk": 5, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "session", 
+    "name": "session", 
+    "app_label": "sessions"
+  }
+},
+{
+  "pk": 6, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "site", 
+    "name": "site", 
+    "app_label": "sites"
+  }
+},
+{
+  "pk": 7, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "person", 
+    "name": "person", 
+    "app_label": "my_app"
+  }
+},
+{
+  "pk": 8, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "personnew", 
+    "name": "person new", 
+    "app_label": "my_app"
+  }
+},
+{
+  "pk": 9, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "personfilesystem", 
+    "name": "person file system", 
+    "app_label": "my_app"
+  }
+},
+{
+  "pk": 10, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+    "model": "logentry", 
+    "name": "log entry", 
+    "app_label": "admin"
+  }
+},
+{
+  "pk": "5ky4r1yoiuxnzr9v4h4t3rb5vkyziqp4", 
+  "model": "sessions.session", 
+  "fields": {
+    "expire_date": "2013-11-21T10:30:58.995Z", 
+    "session_data": "ODllZGE3OGM1NjNjNGIwZjczM2Y0ZjYxOWU1ZGZkMmQyZWE2YjZiZTp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0="
+  }
+},
+{
+  "pk": 1, 
+  "model": "sites.site", 
+  "fields": {
+    "domain": "example.com", 
+    "name": "example.com"
+  }
+},
+{
+  "pk": 1, 
+  "model": "my_app.personfilesystem", 
+  "fields": {
+    "photo": "people/fs/ChuckNorris.jpg", 
+    "first_name": "Chuck", 
+    "last_name": "Norris", 
+    "photo_width": 192, 
+    "photo_height": 240
+  }
+},
+{
+  "pk": 1, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_permission", 
+    "name": "Can add permission", 
+    "content_type": [
+      "auth", 
+      "permission"
+    ]
+  }
+},
+{
+  "pk": 2, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_permission", 
+    "name": "Can change permission", 
+    "content_type": [
+      "auth", 
+      "permission"
+    ]
+  }
+},
+{
+  "pk": 3, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_permission", 
+    "name": "Can delete permission", 
+    "content_type": [
+      "auth", 
+      "permission"
+    ]
+  }
+},
+{
+  "pk": 4, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_group", 
+    "name": "Can add group", 
+    "content_type": [
+      "auth", 
+      "group"
+    ]
+  }
+},
+{
+  "pk": 5, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_group", 
+    "name": "Can change group", 
+    "content_type": [
+      "auth", 
+      "group"
+    ]
+  }
+},
+{
+  "pk": 6, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_group", 
+    "name": "Can delete group", 
+    "content_type": [
+      "auth", 
+      "group"
+    ]
+  }
+},
+{
+  "pk": 7, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_user", 
+    "name": "Can add user", 
+    "content_type": [
+      "auth", 
+      "user"
+    ]
+  }
+},
+{
+  "pk": 8, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_user", 
+    "name": "Can change user", 
+    "content_type": [
+      "auth", 
+      "user"
+    ]
+  }
+},
+{
+  "pk": 9, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_user", 
+    "name": "Can delete user", 
+    "content_type": [
+      "auth", 
+      "user"
+    ]
+  }
+},
+{
+  "pk": 10, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_contenttype", 
+    "name": "Can add content type", 
+    "content_type": [
+      "contenttypes", 
+      "contenttype"
+    ]
+  }
+},
+{
+  "pk": 11, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_contenttype", 
+    "name": "Can change content type", 
+    "content_type": [
+      "contenttypes", 
+      "contenttype"
+    ]
+  }
+},
+{
+  "pk": 12, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_contenttype", 
+    "name": "Can delete content type", 
+    "content_type": [
+      "contenttypes", 
+      "contenttype"
+    ]
+  }
+},
+{
+  "pk": 13, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_session", 
+    "name": "Can add session", 
+    "content_type": [
+      "sessions", 
+      "session"
+    ]
+  }
+},
+{
+  "pk": 14, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_session", 
+    "name": "Can change session", 
+    "content_type": [
+      "sessions", 
+      "session"
+    ]
+  }
+},
+{
+  "pk": 15, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_session", 
+    "name": "Can delete session", 
+    "content_type": [
+      "sessions", 
+      "session"
+    ]
+  }
+},
+{
+  "pk": 16, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_site", 
+    "name": "Can add site", 
+    "content_type": [
+      "sites", 
+      "site"
+    ]
+  }
+},
+{
+  "pk": 17, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_site", 
+    "name": "Can change site", 
+    "content_type": [
+      "sites", 
+      "site"
+    ]
+  }
+},
+{
+  "pk": 18, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_site", 
+    "name": "Can delete site", 
+    "content_type": [
+      "sites", 
+      "site"
+    ]
+  }
+},
+{
+  "pk": 19, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_person", 
+    "name": "Can add person", 
+    "content_type": [
+      "my_app", 
+      "person"
+    ]
+  }
+},
+{
+  "pk": 20, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_person", 
+    "name": "Can change person", 
+    "content_type": [
+      "my_app", 
+      "person"
+    ]
+  }
+},
+{
+  "pk": 21, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_person", 
+    "name": "Can delete person", 
+    "content_type": [
+      "my_app", 
+      "person"
+    ]
+  }
+},
+{
+  "pk": 22, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_personnew", 
+    "name": "Can add person new", 
+    "content_type": [
+      "my_app", 
+      "personnew"
+    ]
+  }
+},
+{
+  "pk": 23, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_personnew", 
+    "name": "Can change person new", 
+    "content_type": [
+      "my_app", 
+      "personnew"
+    ]
+  }
+},
+{
+  "pk": 24, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_personnew", 
+    "name": "Can delete person new", 
+    "content_type": [
+      "my_app", 
+      "personnew"
+    ]
+  }
+},
+{
+  "pk": 25, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_personfilesystem", 
+    "name": "Can add person file system", 
+    "content_type": [
+      "my_app", 
+      "personfilesystem"
+    ]
+  }
+},
+{
+  "pk": 26, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_personfilesystem", 
+    "name": "Can change person file system", 
+    "content_type": [
+      "my_app", 
+      "personfilesystem"
+    ]
+  }
+},
+{
+  "pk": 27, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_personfilesystem", 
+    "name": "Can delete person file system", 
+    "content_type": [
+      "my_app", 
+      "personfilesystem"
+    ]
+  }
+},
+{
+  "pk": 28, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_logentry", 
+    "name": "Can add log entry", 
+    "content_type": [
+      "admin", 
+      "logentry"
+    ]
+  }
+},
+{
+  "pk": 29, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_logentry", 
+    "name": "Can change log entry", 
+    "content_type": [
+      "admin", 
+      "logentry"
+    ]
+  }
+},
+{
+  "pk": 30, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_logentry", 
+    "name": "Can delete log entry", 
+    "content_type": [
+      "admin", 
+      "logentry"
+    ]
+  }
+},
+{
+  "pk": 1, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "super", 
+    "first_name": "", 
+    "last_name": "", 
+    "is_active": true, 
+    "is_superuser": true, 
+    "is_staff": true, 
+    "last_login": "2013-11-07T10:30:58.971Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$10000$yRZhLbahzcsW$+RJ5Dw/Qwlz0iUBPMPQjSJ1gnwxG+/Llo5C16ybZbQI=", 
+    "email": "super.secret@domain.com", 
+    "date_joined": "2013-11-07T10:28:23.820Z"
+  }
+},
+{
+  "pk": 1, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 1, 
+    "action_time": "2013-11-07T10:32:57.404Z", 
+    "object_repr": "Chuck Norris", 
+    "object_id": "1", 
+    "change_message": "", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "personfilesystem"
+    ]
+  }
+},
+{
+  "pk": 2, 
+  "model": "admin.logentry", 
+  "fields": {
+    "action_flag": 2, 
+    "action_time": "2013-11-07T10:39:20.188Z", 
+    "object_repr": "Chuck Norris", 
+    "object_id": "1", 
+    "change_message": "Changed photo.", 
+    "user": [
+      "super"
+    ], 
+    "content_type": [
+      "my_app", 
+      "personfilesystem"
+    ]
+  }
+}
+]

@@ -122,6 +122,12 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         else:
             return FileSystemStorage.url(self, name)
 
+    def path(self, name):
+        if re.match(r"^/image/\w{32}/.*$", name):
+            return ThumborStorage.path(self, name)
+        else:
+            return FileSystemStorage.path(self, name)
+
 
 ## These functions because some methods in ThumborStorage may be called with
 #   self being a ThumborMigrationStorage instance and result in infinite loop.

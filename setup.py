@@ -1,5 +1,8 @@
 import os
-from distutils.core import setup
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
@@ -8,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-thumborstorage',
-    version='0.90.0',
+    version='0.90.1',
     license='MIT Licence',
     author='Stanislas Guerra',
     author_email='stanislas.guerra@gmail.com',
@@ -31,4 +34,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    install_requires=['requests', 'mock'],
 )

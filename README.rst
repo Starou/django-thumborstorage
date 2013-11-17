@@ -55,6 +55,8 @@ models.py
 
 Just set the ``storage`` parameter in the ImageField you want to manage with Thumbor::
 
+    from django_thumborstorage.storages import ThumborStorage
+
     class Stuff(models.Model):
         def upload_path(instance, filename):
             return 'stuffs/%s' % filename

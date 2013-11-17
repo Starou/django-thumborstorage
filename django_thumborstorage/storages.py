@@ -78,8 +78,9 @@ class ThumborStorage(Storage):
             return False
 
     def size(self, name):
-        pass
-        # https://docs.djangoproject.com/en/1.5/ref/files/storage/#django.core.files.storage.Storage.size
+        f = self.open(name)
+        f.seek(0, os.SEEK_END)
+        return f.tell()
 
     def url(self, name):
         return thumbor_image_url(name)

@@ -90,7 +90,28 @@ class ThumborStorageFileTest(unittest.TestCase):
 
 
 class ThumborStorageTest(unittest.TestCase):
-    pass
+    def setUp(self):
+        super(ThumborStorageTest, self).setUp()
+        os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
+        self.patcher_get = mock.patch('django_thumborstorage.storages.requests.get')
+        self.MockGetClass = self.patcher_get.start()
+        self.MockGetClass.side_effect = mocked_thumbor_get_response
+
+        self.patcher_post = mock.patch('django_thumborstorage.storages.requests.post')
+        self.MockPostClass = self.patcher_post.start()
+        self.MockPostClass.side_effect = mocked_thumbor_post_response
+
+    def tearDown(self):
+        self.patcher_get.stop()
+
+    def test_size(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        storage = storages.ThumborStorage()
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        size = storage.size(filename)
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
+        self.assertEqual(size, 9730)
 
 
 def suite():

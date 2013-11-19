@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import re
 import requests
@@ -23,7 +24,7 @@ class ThumborStorageFile(ImageFile):
 
         url = "%s/image" % settings.THUMBOR_WRITABLE_SERVER
         headers = {
-            "Content-Type": "image/jpeg",
+            "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
             "Slug": self.name,
         }
         response = requests.post(url, data=image_content, headers=headers)

@@ -124,7 +124,22 @@ class ThumborStorageTest(DjangoThumborTestCase):
 
 
 class ThumborMigrationStorageTest(DjangoThumborTestCase):
-    pass
+    def setUp(self):
+        super(ThumborMigrationStorageTest, self).setUp()
+        from django_thumborstorage import storages
+        self.storage = storages.ThumborMigrationStorage()
+
+    def test_url_thumbor(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertEqual(self.storage.url(filename),
+                         '%s/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg' % settings.THUMBOR_SERVER)
+
+    def test_url_filesystem(self):
+        from django.conf import settings
+        filename = 'images/people/new/TempletonPeck.jpg'
+        self.assertEqual(self.storage.url(filename),
+                         '%simages/people/new/TempletonPeck.jpg' % settings.MEDIA_URL)
 
 
 def suite():

@@ -6,6 +6,8 @@ DATABASES = {
     }
 }
 
+MEDIA_URL = 'http://media.my_project.com/'
+
 ## Thumbor ##
 THUMBOR_SERVER = 'http://ro.thumbor-server'
 THUMBOR_WRITABLE_SERVER = 'http://rw.thumbor-server'

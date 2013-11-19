@@ -3,6 +3,7 @@
 import mock
 import os
 import unittest
+from django.core.files.base import ContentFile
 
 CURRENT_DIR = os.path.abspath(os.path.split(__file__)[0])
 IMAGE_DIR = os.path.join(CURRENT_DIR, "..", "images")
@@ -67,7 +68,6 @@ class ThumborStorageFileTest(unittest.TestCase):
     def test_write_jpeg(self):
         from django_thumborstorage import storages
         from django.conf import settings
-        from django.core.files.base import ContentFile
         filename = 'people/HannibalSmith.jpg'
         content = ContentFile(open('%s/HannibalSmith.jpg' % IMAGE_DIR))
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
@@ -80,7 +80,6 @@ class ThumborStorageFileTest(unittest.TestCase):
     def test_write_png(self):
         from django_thumborstorage import storages
         from django.conf import settings
-        from django.core.files.base import ContentFile
         filename = 'foundations/gnu.png'
         content = ContentFile(open('%s/gnu.png' % IMAGE_DIR))
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
@@ -114,6 +113,18 @@ class ThumborStorageTest(unittest.TestCase):
         size = storage.size(filename)
         self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
         self.assertEqual(size, 9730)
+
+    def test_save(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        storage = storages.ThumborStorage()
+        filename = 'people/HannibalSmith.jpg'
+        content = ContentFile(open('%s/HannibalSmith.jpg' % IMAGE_DIR))
+        response = storage.save(filename, content)
+        self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
+                                              data=content.file.read(),
+                                              headers={"Content-Type": "image/jpeg", "Slug": filename})
+        self.assertEqual(response, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
 
 def suite():

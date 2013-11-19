@@ -33,9 +33,9 @@ def mocked_thumbor_post_response(url, data, headers):
     return response
 
 
-class ThumborStorageFileTest(unittest.TestCase):
+class DjangoThumborTestCase(unittest.TestCase):
     def setUp(self):
-        super(ThumborStorageFileTest, self).setUp()
+        super(DjangoThumborTestCase, self).setUp()
         os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
         self.patcher_get = mock.patch('django_thumborstorage.storages.requests.get')
         self.MockGetClass = self.patcher_get.start()
@@ -47,7 +47,10 @@ class ThumborStorageFileTest(unittest.TestCase):
 
     def tearDown(self):
         self.patcher_get.stop()
+        self.patcher_post.stop()
 
+
+class ThumborStorageFileTest(DjangoThumborTestCase):
     def test_get_file(self):
         from django_thumborstorage import storages
         from django.conf import settings
@@ -90,21 +93,7 @@ class ThumborStorageFileTest(unittest.TestCase):
         self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
 
-class ThumborStorageTest(unittest.TestCase):
-    def setUp(self):
-        super(ThumborStorageTest, self).setUp()
-        os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
-        self.patcher_get = mock.patch('django_thumborstorage.storages.requests.get')
-        self.MockGetClass = self.patcher_get.start()
-        self.MockGetClass.side_effect = mocked_thumbor_get_response
-
-        self.patcher_post = mock.patch('django_thumborstorage.storages.requests.post')
-        self.MockPostClass = self.patcher_post.start()
-        self.MockPostClass.side_effect = mocked_thumbor_post_response
-
-    def tearDown(self):
-        self.patcher_get.stop()
-
+class ThumborStorageTest(DjangoThumborTestCase):
     def test_url(self):
         from django_thumborstorage import storages
         from django.conf import settings
@@ -133,6 +122,10 @@ class ThumborStorageTest(unittest.TestCase):
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/jpeg", "Slug": filename})
         self.assertEqual(response, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
+
+
+class ThumborMigrationStorageTest(DjangoThumborTestCase):
+    pass
 
 
 def suite():

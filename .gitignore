@@ -8,3 +8,4 @@ dist
 build
 MANIFEST
 *.sqlite
+tests/.coverage

@@ -84,10 +84,8 @@ class ThumborStorage(Storage):
             return False
 
     def size(self, name):
-        # TODO: return f.size
         f = self.open(name)
-        f.seek(0, os.SEEK_END)
-        return f.tell()
+        return f.size
 
     def url(self, name):
         return thumbor_image_url(name)

@@ -5,6 +5,7 @@ django-thumborstorage
 A Django custom storage for Thumbor backend.
 
 **Important:** This package is still under development and should be used with care.
+Contributions are welcome!
 
 This app provide 2 classes ``ThumborStorage`` and ``ThumborMigrationStorage``. The last one
 is a storage you can use for ``Imagefield`` initialy using a ``FileSystemStorage`` you want
@@ -26,11 +27,11 @@ Dependencies
 * Python 2.6 or 2.7
 * Django-1.5.x
 * Requests_
-* Thumbor_
 
 Recommended:
 
 * Django-thumbor_ (to manage thumbnails).
+* Thumbor_
 
 
 Usage

@@ -9,7 +9,6 @@ sys.path.insert(0, '../../')
 
 
 def load_suite_tests(only=None):
-    sys.path.insert(0, '../../')
     only_module, only_test_case = None, None
     if only:
         args = only.split(".")

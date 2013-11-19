@@ -130,10 +130,6 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
 
-## These functions because some methods in ThumborStorage may be called with
-#   self being a ThumborMigrationStorage instance and result in infinite loop.
-# These methods proxiing to these functions.
-
 def thumbor_original_exists(url):
     # May be cool to be able to check if the image exists on Thumbor server
     # *without* having to retrieve it.
@@ -148,6 +144,10 @@ def thumbor_original_exists(url):
     else:
         return False
 
+
+## These functions because some methods in ThumborStorage may be called with
+#   self being a ThumborMigrationStorage instance and result in infinite loop.
+# These methods proxiing to these functions.
 
 def thumbor_image_url(name):
     return "%s%s" % (settings.THUMBOR_SERVER, name)

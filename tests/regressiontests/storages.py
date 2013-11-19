@@ -94,30 +94,29 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
 
 
 class ThumborStorageTest(DjangoThumborTestCase):
-    def test_url(self):
+    def setUp(self):
+        super(ThumborStorageTest, self).setUp()
         from django_thumborstorage import storages
+        self.storage = storages.ThumborStorage()
+
+    def test_url(self):
         from django.conf import settings
-        storage = storages.ThumborStorage()
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
-        self.assertEqual(storage.url(filename),
+        self.assertEqual(self.storage.url(filename),
                          '%s/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg' % settings.THUMBOR_SERVER)
 
     def test_size(self):
-        from django_thumborstorage import storages
         from django.conf import settings
-        storage = storages.ThumborStorage()
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
-        size = storage.size(filename)
+        size = self.storage.size(filename)
         self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
         self.assertEqual(size, 9730)
 
     def test_save(self):
-        from django_thumborstorage import storages
         from django.conf import settings
-        storage = storages.ThumborStorage()
         filename = 'people/HannibalSmith.jpg'
         content = ContentFile(open('%s/HannibalSmith.jpg' % IMAGE_DIR))
-        response = storage.save(filename, content)
+        response = self.storage.save(filename, content)
         self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/jpeg", "Slug": filename})
@@ -131,4 +130,5 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
 def suite():
     suite = unittest.TestLoader().loadTestsFromTestCase(ThumborStorageTest)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ThumborStorageFileTest))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ThumborMigrationStorageTest))
     return suite

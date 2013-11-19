@@ -141,6 +141,17 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         self.assertEqual(self.storage.url(filename),
                          '%simages/people/new/TempletonPeck.jpg' % settings.MEDIA_URL)
 
+    def test_path_thumbor(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        with self.assertRaises(NotImplementedError):
+            self.storage.path(filename)
+
+    def test_path_filesystem(self):
+        from django.conf import settings
+        filename = 'images/people/new/TempletonPeck.jpg'
+        self.assertEqual(self.storage.path(filename), '/media/images/people/new/TempletonPeck.jpg')
+
 
 def suite():
     suite = unittest.TestLoader().loadTestsFromTestCase(ThumborStorageTest)

@@ -7,6 +7,7 @@ DATABASES = {
 }
 
 MEDIA_URL = 'http://media.my_project.com/'
+MEDIA_ROOT = '/media'
 
 ## Thumbor ##
 THUMBOR_SERVER = 'http://ro.thumbor-server'

@@ -45,6 +45,11 @@ class ThumborStorageFile(ImageFile):
 
     file = property(_get_file, _set_file)
     
+    @property
+    def size(self):
+        self.seek(0, os.SEEK_END)
+        return self.tell()
+
 
 class ThumborStorage(Storage):
     """Thumbor Simple Storage Service"""
@@ -78,6 +83,7 @@ class ThumborStorage(Storage):
             return False
 
     def size(self, name):
+        # TODO: return f.size
         f = self.open(name)
         f.seek(0, os.SEEK_END)
         return f.tell()

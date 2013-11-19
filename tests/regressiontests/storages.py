@@ -53,7 +53,7 @@ class ThumborStorageFileTest(unittest.TestCase):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         thumbor_file = storages.ThumborStorageFile(filename, mode='r')
         thumbor_file.file
-        self.MockGetClass.called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
 
     def test_size(self):
         from django_thumborstorage import storages
@@ -61,10 +61,10 @@ class ThumborStorageFileTest(unittest.TestCase):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         thumbor_file = storages.ThumborStorageFile(filename, mode='r')
         size = thumbor_file.size
-        self.MockGetClass.called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_SERVER, filename))
         self.assertEqual(size, 9730)
 
-    def test_write(self):
+    def test_write_jpeg(self):
         from django_thumborstorage import storages
         from django.conf import settings
         from django.core.files.base import ContentFile
@@ -72,7 +72,21 @@ class ThumborStorageFileTest(unittest.TestCase):
         content = ContentFile(open('%s/HannibalSmith.jpg' % IMAGE_DIR))
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
         thumbor_file.write(content=content)
-        self.MockPostClass.called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER)
+        self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
+                                              data=content.file.read(),
+                                              headers={"Content-Type": "image/jpeg", "Slug": filename})
+
+    def test_write_png(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        from django.core.files.base import ContentFile
+        filename = 'foundations/gnu.png'
+        content = ContentFile(open('%s/gnu.png' % IMAGE_DIR))
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        thumbor_file.write(content=content)
+        self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
+                                              data=content.file.read(),
+                                              headers={"Content-Type": "image/png", "Slug": filename})
 
 
 class ThumborStorageTest(unittest.TestCase):

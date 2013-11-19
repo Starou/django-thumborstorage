@@ -2,6 +2,9 @@
 django-thumborstorage
 =====================
 
+.. image:: https://coveralls.io/repos/Starou/django-thumborstorage/badge.png?branch=master
+:target: https://coveralls.io/r/Starou/django-thumborstorage?branch=master 
+
 A Django custom storage for Thumbor backend.
 
 **Important:** This package is still under development and should be used with care.

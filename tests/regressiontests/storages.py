@@ -75,6 +75,7 @@ class ThumborStorageFileTest(unittest.TestCase):
         self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/jpeg", "Slug": filename})
+        self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
     def test_write_png(self):
         from django_thumborstorage import storages
@@ -87,6 +88,7 @@ class ThumborStorageFileTest(unittest.TestCase):
         self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_WRITABLE_SERVER,
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/png", "Slug": filename})
+        self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
 
 class ThumborStorageTest(unittest.TestCase):

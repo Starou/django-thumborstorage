@@ -105,6 +105,14 @@ class ThumborStorageTest(unittest.TestCase):
     def tearDown(self):
         self.patcher_get.stop()
 
+    def test_url(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        storage = storages.ThumborStorage()
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertEqual(storage.url(filename),
+                         '%s/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg' % settings.THUMBOR_SERVER)
+
     def test_size(self):
         from django_thumborstorage import storages
         from django.conf import settings

@@ -135,6 +135,17 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
 
+class OverwriteCachedMixin(object):
+    """Performs a DELETE if the image exists and then a POST. """
+    pass
+
+
+class ThumborOverwriteCachedStorage(ThumborStorage, OverwriteMixin):
+    """Use this storage if you want to overwrite the existing image on save()
+    and if your Thumbor service is behind a cache system."""
+    pass
+
+
 def thumbor_original_exists(url):
     # May be cool to be able to check if the image exists on Thumbor server
     # *without* having to retrieve it.

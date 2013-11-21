@@ -135,15 +135,16 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
 
-class OverwriteCachedMixin(object):
-    """Performs a DELETE if the image exists and then a POST. """
-    pass
+class ThumborOverwriteCachedStorage(ThumborStorage):
+    """Use this storage if you want to delete the existing image
+    before uploading the new one under a new uuid (Thunbor being 
+    behind a cache-system for instance).
 
-
-class ThumborOverwriteCachedStorage(ThumborStorage, OverwriteMixin):
-    """Use this storage if you want to overwrite the existing image on save()
-    and if your Thumbor service is behind a cache system."""
-    pass
+    Thus to avoid orphaned images on Thumbor. 
+    """
+    
+    def _save(self, name, content):
+        pass
 
 
 def thumbor_original_exists(url):

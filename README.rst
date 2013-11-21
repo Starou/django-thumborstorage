@@ -77,7 +77,7 @@ Just set the ``storage`` parameter in the ImageField you want to manage with Thu
 TODO
 ====
 
-* PUT, DELETE
+* PUT
 
 .. _Requests: http://www.python-requests.org/en/latest/
 .. _Thumbor: https://github.com/globocom/thumbor

@@ -33,6 +33,22 @@ def mocked_thumbor_post_response(url, data, headers):
     return response
 
 
+class MockedDeleteAllowedResponse:
+    status_code = 204
+    content = ''
+
+    def __init__(self, url):
+        basename = os.path.basename(url)
+        filename = os.path.join(IMAGE_DIR, basename)
+        if not os.path.exists(filename):
+            self.status_code = 404
+
+
+def mocked_thumbor_delete_allowed_response(url):
+    response = MockedDeleteAllowedResponse(url)
+    return response
+
+
 class DjangoThumborTestCase(unittest.TestCase):
     def setUp(self):
         super(DjangoThumborTestCase, self).setUp()
@@ -45,9 +61,13 @@ class DjangoThumborTestCase(unittest.TestCase):
         self.MockPostClass = self.patcher_post.start()
         self.MockPostClass.side_effect = mocked_thumbor_post_response
 
+        self.patcher_delete = mock.patch('django_thumborstorage.storages.requests.delete')
+        self.MockDeleteClass = self.patcher_delete.start()
+
     def tearDown(self):
         self.patcher_get.stop()
         self.patcher_post.stop()
+        self.patcher_delete.stop()
 
 
 class ThumborStorageFileTest(DjangoThumborTestCase):
@@ -92,6 +112,20 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
                                               headers={"Content-Type": "image/png", "Slug": filename})
         self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
+    def test_delete_allowed(self):
+        self.MockDeleteClass.side_effect = mocked_thumbor_delete_allowed_response
+        from django_thumborstorage import storages
+        from django.conf import settings
+        filename = '/image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        thumbor_file.delete()
+        self.MockDeleteClass.assert_called_with("%s%s" % (settings.THUMBOR_WRITABLE_SERVER, filename))
+        # TODO test status_code == 204 (how ?)
+
+        from django_thumborstorage import exceptions
+        filename = '/image/oooooo32chars_random_idooooooooo/does_not_exists.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        self.assertRaises(exceptions.NotFoundException, thumbor_file.delete)
 
 class ThumborStorageTest(DjangoThumborTestCase):
     def setUp(self):

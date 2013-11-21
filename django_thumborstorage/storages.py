@@ -37,6 +37,8 @@ class ThumborStorageFile(ImageFile):
         response = requests.delete(url)
         if response.status_code == 405:
             raise exceptions.MethodNotAllowedException
+        elif response.status_code == 404:
+            raise exceptions.NotFoundException
         elif response.status_code == 204:
             return
 

@@ -133,6 +133,12 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         ThumborStorage.__init__(self, options)
         FileSystemStorage.__init__(self, location=location, base_url=base_url)
 
+    def _open(self, name, mode='rb'):
+        if re.match(r"^/image/\w{32}/.*$", name):
+            return ThumborStorage._open(self, name, mode)
+        else:
+            return FileSystemStorage._open(self, name, mode)
+
     def delete(self, name):
         if re.match(r"^/image/\w{32}/.*$", name):
             return ThumborStorage.delete(self, name)

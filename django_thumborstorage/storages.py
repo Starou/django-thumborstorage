@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.http import urlencode
+from . import exceptions
 
 
 class ThumborStorageFile(ImageFile):
@@ -30,6 +31,14 @@ class ThumborStorageFile(ImageFile):
         response = requests.post(url, data=image_content, headers=headers)
         self._location = response.headers["location"]
         return super(ThumborStorageFile, self).write(image_content)
+
+    def delete(self):
+        url = "%s%s" % (settings.THUMBOR_WRITABLE_SERVER, self.name)
+        response = requests.delete(url)
+        if response.status_code == 405:
+            raise exceptions.MethodNotAllowedException
+        elif response.status_code == 204:
+            return
 
     def _get_file(self):
         if self._file is None:
@@ -72,8 +81,8 @@ class ThumborStorage(Storage):
         return name
 
     def delete(self, name):
-        # https://docs.djangoproject.com/en/1.5/ref/files/storage/#django.core.files.storage.Storage.delete
-        pass
+        f = self.open(name)
+        f.delete()
 
     def exists(self, name):
         # name is the location returned by Thumbor when posted > may exists.

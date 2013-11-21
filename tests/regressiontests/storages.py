@@ -49,6 +49,15 @@ def mocked_thumbor_delete_allowed_response(url):
     return response
 
 
+class MockedDeleteNotAllowedResponse:
+    status_code = 405
+
+
+def mocked_thumbor_delete_not_allowed_response(url):
+    response = MockedDeleteNotAllowedResponse()
+    return response
+
+
 class DjangoThumborTestCase(unittest.TestCase):
     def setUp(self):
         super(DjangoThumborTestCase, self).setUp()
@@ -126,6 +135,19 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         filename = '/image/oooooo32chars_random_idooooooooo/does_not_exists.png'
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
         self.assertRaises(exceptions.NotFoundException, thumbor_file.delete)
+
+    def test_delete_not_allowed(self):
+        self.MockDeleteClass.side_effect = mocked_thumbor_delete_not_allowed_response
+        from django_thumborstorage import storages
+        from django.conf import settings
+        from django_thumborstorage import exceptions
+        filename = '/image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
+
+        filename = '/image/oooooo32chars_random_idooooooooo/does_not_exists.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
 
 class ThumborStorageTest(DjangoThumborTestCase):
     def setUp(self):

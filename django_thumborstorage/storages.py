@@ -23,7 +23,7 @@ class ThumborStorageFile(ImageFile):
         image_content = content.file.read()
         content.file.seek(0)
 
-        url = "%s/image" % settings.THUMBOR_WRITABLE_SERVER
+        url = "%s/image" % settings.THUMBOR_RW_SERVER
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
             "Slug": self.name,
@@ -33,7 +33,7 @@ class ThumborStorageFile(ImageFile):
         return super(ThumborStorageFile, self).write(image_content)
 
     def delete(self):
-        url = "%s%s" % (settings.THUMBOR_WRITABLE_SERVER, self.name)
+        url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
         response = requests.delete(url)
         if response.status_code == 405:
             raise exceptions.MethodNotAllowedException
@@ -46,7 +46,7 @@ class ThumborStorageFile(ImageFile):
         if self._file is None:
             self._file = StringIO()
             if 'r' in self._mode:
-                url = "%s%s" % (settings.THUMBOR_SERVER, self.name)
+                url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
                 response = requests.get(url)
                 self._file.write(response.content)
                 self._file.seek(0)
@@ -178,4 +178,4 @@ def thumbor_original_exists(url):
 # These methods proxiing to these functions.
 
 def thumbor_image_url(name):
-    return "%s%s" % (settings.THUMBOR_SERVER, name)
+    return "%s%s" % (settings.THUMBOR_RW_SERVER, name)

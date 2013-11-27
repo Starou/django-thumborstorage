@@ -49,11 +49,11 @@ Add ``django-thumborstorage`` in your ``INSTALLED_APPS``.
 
 And set the following::
 
-    THUMBOR_SERVER = 'http://localhost:8888'
-    THUMBOR_WRITABLE_SERVER = THUMBOR_SERVER
+    THUMBOR_RW_SERVER = 'http://localhost:8888'
     THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
 
-``THUMBOR_WRITABLE_SERVER`` exists because in some configurations you write on one server and read on another.
+*Note*: We do not use ``THUMBOR_SERVER`` variable which is used by *django-thumbor* app
+because in some configurations you write on one server and generate thumbnails on another.
 
 
 models.py

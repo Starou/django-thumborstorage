@@ -74,6 +74,20 @@ Just set the ``storage`` parameter in the ImageField you want to manage with Thu
         photo_width = models.IntegerField(blank=True, null=True)
 
 
+CHANGELOG
+=========
+
+0.91.3
+''''''
+
+Backward imcompatibilities
+--------------------------
+
+* ``THUMBOR_WRITABLE_SERVER`` setting is replaced by ``THUMBOR_RW_SERVER`` since it is now used to retrieve the
+  original file.
+
+
+
 TODO
 ====
 

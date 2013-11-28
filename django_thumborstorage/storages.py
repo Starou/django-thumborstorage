@@ -101,9 +101,13 @@ class ThumborStorage(Storage):
     def url(self, name):
         return thumbor_image_url(name)
 
+    def key(self, name):
+        return re.match(r"^/image/(?P<key>\w{32})/.*$", name).groupdict()['key']
+
     def get_available_name(self, name):
         # There is no way to know if the image exists on Thumbor.
-        # When posting a new original image, Thumbor generate a ramdom id as key.
+        # When posting a new original image, Thumbor generate a ramdom unique id as key.
+        # http://en.wikipedia.org/wiki/Universally_unique_identifier
         # https://github.com/globocom/thumbor/blob/ae9a150e8a2b771dd49b4137186e9fdfbea09733/thumbor/handlers/images.py#L51
         return name
 
@@ -150,6 +154,12 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return ThumborStorage.url(self, name)
         else:
             return FileSystemStorage.url(self, name)
+
+    def key(self, name):
+        if re.match(r"^/image/\w{32}/.*$", name):
+            return ThumborStorage.key(self, name)
+        else:
+            raise NotImplementedError
 
     def path(self, name):
         if re.match(r"^/image/\w{32}/.*$", name):

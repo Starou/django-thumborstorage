@@ -5,6 +5,8 @@ django-thumborstorage
 .. image:: https://coveralls.io/repos/Starou/django-thumborstorage/badge.png?branch=master
   :target: https://coveralls.io/r/Starou/django-thumborstorage?branch=master
 
+.. image:: https://pypip.in/v/django-thumborstorage/badge.png
+  :target: https://pypi.python.org/pypi/django-thumborstorage
 
 
 A Django custom storage for Thumbor backend.

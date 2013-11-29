@@ -4,3 +4,7 @@ coveralls:
 	# This generate the .coverage report file (default).
 	@coverage run --rcfile=coveragerc runtests.py
 	@coveralls -y coveralls.yaml -d .coverage
+
+coverage:
+	@coverage run --rcfile=coveragerc runtests.py
+	@coverage report -m

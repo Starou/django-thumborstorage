@@ -15,7 +15,10 @@ class MockedGetResponse:
         """Retrieve the file on the filesytem according to the name. """
         basename = os.path.basename(url)
         filename = os.path.join(IMAGE_DIR, basename)
-        self.content = open(filename, "r").read()
+        if not os.path.exists(filename):
+            self.status_code = 404
+        else:
+            self.content = open(filename, "r").read()
 
 
 def mocked_thumbor_get_response(url):
@@ -72,6 +75,7 @@ class DjangoThumborTestCase(unittest.TestCase):
 
         self.patcher_delete = mock.patch('django_thumborstorage.storages.requests.delete')
         self.MockDeleteClass = self.patcher_delete.start()
+        self.MockDeleteClass.side_effect = mocked_thumbor_delete_allowed_response
 
     def tearDown(self):
         self.patcher_get.stop()
@@ -131,7 +135,6 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
     def test_delete_allowed(self):
-        self.MockDeleteClass.side_effect = mocked_thumbor_delete_allowed_response
         from django_thumborstorage import storages
         from django.conf import settings
         filename = '/image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
@@ -191,6 +194,19 @@ class ThumborStorageTest(DjangoThumborTestCase):
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/jpeg", "Slug": filename})
         self.assertEqual(response, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
+
+    def test_delete(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.storage.delete(filename)
+        self.MockDeleteClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
+
+    def test_exists(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertTrue(self.storage.exists(filename))
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/DoesNoyExists.jpg'
+        self.assertFalse(self.storage.exists(filename))
 
 
 class ThumborMigrationStorageTest(DjangoThumborTestCase):

@@ -84,8 +84,6 @@ CHANGELOG
 0.91.5
 ''''''
 
-* Add ``ThumborStorageFile.read()`` so that ``<ImageField>.file.read()`` works as expected.
-
 
 0.91.4
 ''''''

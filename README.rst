@@ -81,6 +81,18 @@ Just set the ``storage`` parameter in the ImageField you want to manage with Thu
 CHANGELOG
 =========
 
+0.91.5
+''''''
+
+* Add ``ThumborStorageFile.read()`` so that ``<ImageField>.file.read()`` works as expected.
+
+
+0.91.4
+''''''
+
+* Add ``ThumborStorage.key(name)`` to retrieve the Thumbor uuid from the name.
+
+
 0.91.3
 ''''''
 

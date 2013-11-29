@@ -47,7 +47,9 @@ settings.py
 
 Add ``django-thumborstorage`` in your ``INSTALLED_APPS``.
 
-And set the following::
+And set the following:
+
+.. code-block:: python
 
     THUMBOR_RW_SERVER = 'http://localhost:8888'
     THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
@@ -59,7 +61,9 @@ because in some configurations you write on one server and generate thumbnails o
 models.py
 '''''''''
 
-Just set the ``storage`` parameter in the ImageField you want to manage with Thumbor::
+Just set the ``storage`` parameter in the ImageField you want to manage with Thumbor:
+
+.. code-block:: python
 
     from django_thumborstorage.storages import ThumborStorage
 

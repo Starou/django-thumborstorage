@@ -56,6 +56,9 @@ class ThumborStorageFile(ImageFile):
         self._file = value
 
     file = property(_get_file, _set_file)
+
+    def read(self, *args, **kwargs):
+        return self.file.read(*args, **kwargs)
     
     @property
     def size(self):

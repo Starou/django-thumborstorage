@@ -97,6 +97,15 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
         self.assertEqual(size, 9730)
 
+    def test_read(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        thumbor_file = storages.ThumborStorageFile(filename, mode='r')
+        content = thumbor_file.read()
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
+        self.assertEqual(len(content), 9730)
+
     def test_write_jpeg(self):
         from django_thumborstorage import storages
         from django.conf import settings

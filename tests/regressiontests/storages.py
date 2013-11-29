@@ -199,6 +199,10 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         from django_thumborstorage import storages
         self.storage = storages.ThumborMigrationStorage()
 
+    def test_is_thumbor(self):
+        self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'))
+        self.assertFalse(self.storage.is_thumbor('images/people/new/TempletonPeck.jpg'))
+
     def test_url_thumbor(self):
         from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'

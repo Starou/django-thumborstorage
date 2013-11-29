@@ -138,34 +138,37 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         FileSystemStorage.__init__(self, location=location, base_url=base_url)
 
     def _open(self, name, mode='rb'):
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if self.is_thumbor(name):
             return ThumborStorage._open(self, name, mode)
         else:
             return FileSystemStorage._open(self, name, mode)
 
     def delete(self, name):
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if self.is_thumbor(name):
             return ThumborStorage.delete(self, name)
         else:
             return FileSystemStorage.delete(self, name)
 
     def url(self, name):
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if self.is_thumbor(name):
             return ThumborStorage.url(self, name)
         else:
             return FileSystemStorage.url(self, name)
 
     def key(self, name):
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if self.is_thumbor(name):
             return ThumborStorage.key(self, name)
         else:
             raise NotImplementedError
 
     def path(self, name):
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if self.is_thumbor(name):
             return ThumborStorage.path(self, name)
         else:
             return FileSystemStorage.path(self, name)
+
+    def is_thumbor(self, name):
+        return re.match(r"^/image/\w{32}/.*$", name)
 
 
 def thumbor_original_exists(url):

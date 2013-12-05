@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-thumborstorage',
-    version='0.91.5',
+    version='0.91.6',
     license='MIT Licence',
     author='Stanislas Guerra',
     author_email='stanislas.guerra@gmail.com',

@@ -34,6 +34,7 @@ Dependencies
 * Python 2.6 or 2.7
 * Django-1.5.x
 * Requests_
+* Libthumbor_
 
 Recommended:
 
@@ -53,11 +54,12 @@ And set the following:
 
 .. code-block:: python
 
-    THUMBOR_RW_SERVER = 'http://localhost:8888'
+    THUMBOR_SERVER = 'http://localhost:8888'
     THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
+    # This may be a different host than THUMBOR_SERVER
+    # only reachable by your Django server.
+    THUMBOR_RW_SERVER = 'http://localhost:8888'
 
-*Note*: We do not use ``THUMBOR_SERVER`` variable which is used by *django-thumbor* app
-because in some configurations you write on one server and generate thumbnails on another.
 
 
 models.py
@@ -80,11 +82,31 @@ Just set the ``storage`` parameter in the ImageField you want to manage with Thu
         photo_width = models.IntegerField(blank=True, null=True)
 
 
+In the code
+'''''''''''
+
+You can get the Thumbor ``uuid`` from the ``<ImageField>`` instance using:
+
+.. code-block:: python
+
+    my_stuff.photo.storage.key(my_stuff.photo.name)
+
+This is useful to `generate_url()` with Django-thumbor_ when original files are stored on Thumbor. Thus,
+you can pass the key as url parameter.
+
+
 CHANGELOG
 =========
 
-0.91.5
+0.91.6
 ''''''
+
+* Use THUMBOR_SERVER to generate the original file url.
+
+Backward imcompatibilities
+--------------------------
+
+* ``THUMBOR_SERVER`` and ``THUMBOR_SECURITY_KEY`` are required in settings.
 
 
 0.91.4
@@ -111,4 +133,5 @@ TODO
 
 .. _Requests: http://www.python-requests.org/en/latest/
 .. _Thumbor: https://github.com/globocom/thumbor
+.. _Libthumbor: https://github.com/heynemann/libthumbor
 .. _Django-thumbor: https://django-thumbor.readthedocs.org/en/latest/

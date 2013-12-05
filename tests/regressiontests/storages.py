@@ -13,6 +13,7 @@ class MockedGetResponse:
 
     def __init__(self, url):
         """Retrieve the file on the filesytem according to the name. """
+        #TODO: catch LocationParseError.
         basename = os.path.basename(url)
         filename = os.path.join(IMAGE_DIR, basename)
         if not os.path.exists(filename):
@@ -208,7 +209,10 @@ class ThumborStorageTest(DjangoThumborTestCase):
         from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertTrue(self.storage.exists(filename))
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/DoesNoyExists.jpg'
+        self.assertFalse(self.storage.exists(filename))
+        filename = 'people/new/TempletonPeck.jpg'
         self.assertFalse(self.storage.exists(filename))
 
 
@@ -235,6 +239,24 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
+    def test_path_thumbor(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        with self.assertRaises(NotImplementedError):
+            self.storage.path(filename)
+
+    def test_delete_thumbor(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.storage.delete(filename)
+        self.MockDeleteClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
+
+    def test_exists_thumbor(self):
+        from django.conf import settings
+        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertTrue(self.storage.exists(filename))
+        self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
+
     def test_url_filesystem(self):
         from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
@@ -247,16 +269,23 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         with self.assertRaises(NotImplementedError):
             self.storage.key(filename)
 
-    def test_path_thumbor(self):
-        from django.conf import settings
-        filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
-        with self.assertRaises(NotImplementedError):
-            self.storage.path(filename)
-
     def test_path_filesystem(self):
         from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.path(filename), '/media/images/people/new/TempletonPeck.jpg')
+
+    def test_delete_filesytem(self):
+        from django.conf import settings
+        filename = 'images/people/new/TempletonPeck.jpg'
+        # Note: FileSystemStorage does not raises exception if the file does not exists.
+        self.storage.delete(filename)
+        assert not self.MockDeleteClass.called, "Should not DELETE on Thumbor."
+
+    def test_exists_filesystem(self):
+        from django.conf import settings
+        filename = 'images/people/new/TempletonPeck.jpg'
+        self.storage.exists(filename)
+        assert not self.MockGetClass.called, "Should not GET on Thumbor."
 
 
 def suite():

@@ -98,7 +98,7 @@ you can pass the key as url parameter.
 CHANGELOG
 =========
 
-0.91.6
+0.91.5
 ''''''
 
 * Use THUMBOR_SERVER to generate the original file url.

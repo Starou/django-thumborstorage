@@ -10,5 +10,7 @@ MEDIA_URL = 'http://media.my_project.com/'
 MEDIA_ROOT = '/media'
 
 ## Thumbor ##
+THUMBOR_SERVER = 'http://ro.thumbor-server'
+THUMBOR_SECURITY_KEY = 'my-secure-key'
 THUMBOR_RW_SERVER = 'http://rw.thumbor-server'
 THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'

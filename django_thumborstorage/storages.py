@@ -150,6 +150,12 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
         else:
             return FileSystemStorage.delete(self, name)
 
+    def exists(self, name):
+        if self.is_thumbor(name):
+            return ThumborStorage.exists(self, name)
+        else:
+            return FileSystemStorage.exists(self, name)
+
     def url(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.url(self, name)
@@ -178,7 +184,7 @@ def thumbor_original_exists(url):
     try:
         response = requests.get(url)
     # Happens when trying to get an image when the name in db 
-    # is in a FileSystemStorage form (without the '/' at the beginning).
+    # is in a FileSystemStorage form (without the leading slash).
     except LocationParseError:
         return False
     if response.status_code == 200:

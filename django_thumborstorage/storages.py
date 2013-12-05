@@ -2,6 +2,7 @@ import mimetypes
 import os
 import re
 import requests
+from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
 from StringIO import StringIO
 from django.conf import settings
@@ -89,7 +90,7 @@ class ThumborStorage(Storage):
     def exists(self, name):
         # name is the location returned by Thumbor when posted > may exists.
         if re.match(r"^/image/\w{32}/.*$", name):
-            return thumbor_original_exists(thumbor_image_url(name))
+            return thumbor_original_exists(thumbor_original_image_url(name))
         # name as defined in 'upload_to' > new image.
         else:
             return False
@@ -99,7 +100,7 @@ class ThumborStorage(Storage):
         return f.size
 
     def url(self, name):
-        return thumbor_image_url(name)
+        return thumbor_image_url(self.key(name))
 
     def key(self, name):
         return re.match(r"^/image/(?P<key>\w{32})/.*$", name).groupdict()['key']
@@ -190,5 +191,9 @@ def thumbor_original_exists(url):
 #   self being a ThumborMigrationStorage instance and result in infinite loop.
 # These methods proxiing to these functions.
 
-def thumbor_image_url(name):
+def thumbor_image_url(key):
+    crypto = CryptoURL(key=settings.THUMBOR_SECURITY_KEY)
+    return "%s%s" % (settings.THUMBOR_SERVER, crypto.generate(image_url=key))
+
+def thumbor_original_image_url(name):
     return "%s%s" % (settings.THUMBOR_RW_SERVER, name)

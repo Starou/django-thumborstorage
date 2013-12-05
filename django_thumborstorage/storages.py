@@ -89,7 +89,7 @@ class ThumborStorage(Storage):
 
     def exists(self, name):
         # name is the location returned by Thumbor when posted > may exists.
-        if re.match(r"^/image/\w{32}/.*$", name):
+        if re.match(r"^/image/\w{32}(?:/.*){0,1}$", name):
             return thumbor_original_exists(thumbor_original_image_url(name))
         # name as defined in 'upload_to' > new image.
         else:
@@ -103,7 +103,7 @@ class ThumborStorage(Storage):
         return thumbor_image_url(self.key(name))
 
     def key(self, name):
-        return re.match(r"^/image/(?P<key>\w{32})/.*$", name).groupdict()['key']
+        return re.match(r"^/image/(?P<key>\w{32})(?:/.*){0,1}$", name).groupdict()['key']
 
     def get_available_name(self, name):
         # There is no way to know if the image exists on Thumbor.
@@ -169,7 +169,7 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
     def is_thumbor(self, name):
-        return re.match(r"^/image/\w{32}/{0,1}.*$", name)
+        return re.match(r"^/image/\w{32}(?:/.*){0,1}$", name)
 
 
 def thumbor_original_exists(url):

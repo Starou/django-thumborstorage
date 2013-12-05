@@ -178,6 +178,9 @@ class ThumborStorageTest(DjangoThumborTestCase):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
+        filename = '/image/5247a82854384f228c6fba432c67e6a8'
+        self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
+
     def test_size(self):
         from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
@@ -219,6 +222,7 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'))
         self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8'))
         self.assertFalse(self.storage.is_thumbor('images/people/new/TempletonPeck.jpg'))
+        self.assertFalse(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8BlahBlahBlah'))
 
     def test_url_thumbor(self):
         from django.conf import settings

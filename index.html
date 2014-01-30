@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Django-thumborstorage by Starou</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Django-thumborstorage</h1>
+        <h2>A Django custom storage for Thumbor backend</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/Starou/django-thumborstorage/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/Starou/django-thumborstorage/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/Starou/django-thumborstorage" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1></h1>
+
+<h1>
+<a name="django-thumborstorage" class="anchor" href="#django-thumborstorage"><span class="octicon octicon-link"></span></a>django-thumborstorage</h1>
+
+<p>.. image:: <a href="https://coveralls.io/repos/Starou/django-thumborstorage/badge.png?branch=master">https://coveralls.io/repos/Starou/django-thumborstorage/badge.png?branch=master</a>
+  :target: <a href="https://coveralls.io/r/Starou/django-thumborstorage?branch=master">https://coveralls.io/r/Starou/django-thumborstorage?branch=master</a></p>
+
+<p>.. image:: <a href="https://pypip.in/v/django-thumborstorage/badge.png">https://pypip.in/v/django-thumborstorage/badge.png</a>
+  :target: <a href="https://pypi.python.org/pypi/django-thumborstorage">https://pypi.python.org/pypi/django-thumborstorage</a></p>
+
+<p>A Django custom storage for Thumbor backend.</p>
+
+<p>This app provide 2 classes <code>ThumborStorage</code> and <code>ThumborMigrationStorage</code>. The last one
+is a storage you can use for <code>Imagefield</code> initialy using a <code>FileSystemStorage</code> you want
+to migrate to Thumbor without batch-moving all of them. That way, Django continues to serve
+them from the file system until you change the image on that field.</p>
+
+<h1>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
+
+<p>::</p>
+
+<pre><code>pip install django-thumborstorage
+</code></pre>
+
+<p>Dependencies
+''''''''''''</p>
+
+<ul>
+<li>Python 2.6 or 2.7</li>
+<li>Django-1.5.x</li>
+<li>Requests_</li>
+<li>Libthumbor_</li>
+</ul><p>Recommended:</p>
+
+<ul>
+<li>Django-thumbor_ (to manage thumbnails).</li>
+<li>Thumbor_</li>
+</ul><h1>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>settings.py
+'''''''''''</p>
+
+<p>Add <code>django-thumborstorage</code> in your <code>INSTALLED_APPS</code>.</p>
+
+<p>And set the following:</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>THUMBOR_SERVER = 'http://localhost:8888'
+THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
+# This may be a different host than THUMBOR_SERVER
+# only reachable by your Django server.
+THUMBOR_RW_SERVER = 'http://localhost:8888'
+</code></pre>
+
+<p>models.py
+'''''''''</p>
+
+<p>Just set the <code>storage</code> parameter in the ImageField you want to manage with Thumbor:</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>from django_thumborstorage.storages import ThumborStorage
+
+class Stuff(models.Model):
+    def upload_path(instance, filename):
+        return 'stuffs/%s' % filename
+    photo = models.ImageField(upload_to=upload_path,
+                              storage=ThumborStorage(),
+                              height_field='photo_height',
+                              width_field='photo_width')
+    photo_height = models.IntegerField(blank=True, null=True)
+    photo_width = models.IntegerField(blank=True, null=True)
+</code></pre>
+
+<p>In the code
+'''''''''''</p>
+
+<p>You can get the Thumbor <code>uuid</code> from the <code>&lt;ImageField&gt;</code> instance using:</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>my_stuff.photo.storage.key(my_stuff.photo.name)
+</code></pre>
+
+<p>This is useful to <code>generate_url()</code> with Django-thumbor_ when original files are stored on Thumbor. Thus,
+you can pass the key as url parameter.</p>
+
+<h1>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>CHANGELOG</h1>
+
+<p>0.91.5
+''''''</p>
+
+<ul>
+<li>Use THUMBOR_SERVER to generate the original file url.</li>
+</ul><h2>
+<a name="backward-imcompatibilities" class="anchor" href="#backward-imcompatibilities"><span class="octicon octicon-link"></span></a>Backward imcompatibilities</h2>
+
+<ul>
+<li>
+<code>THUMBOR_SERVER</code> and <code>THUMBOR_SECURITY_KEY</code> are required in settings.</li>
+</ul><p>0.91.4
+''''''</p>
+
+<ul>
+<li>Add <code>ThumborStorage.key(name)</code> to retrieve the Thumbor uuid from the name.</li>
+</ul><p>0.91.3
+''''''</p>
+
+<h2>
+<a name="backward-imcompatibilities-1" class="anchor" href="#backward-imcompatibilities-1"><span class="octicon octicon-link"></span></a>Backward imcompatibilities</h2>
+
+<ul>
+<li>
+<code>THUMBOR_WRITABLE_SERVER</code> setting is replaced by <code>THUMBOR_RW_SERVER</code> since it is now used to retrieve the
+original file.</li>
+</ul><h1>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h1>
+
+<ul>
+<li>PUT</li>
+</ul><p>.. _Requests: <a href="http://www.python-requests.org/en/latest/">http://www.python-requests.org/en/latest/</a>
+.. _Thumbor: <a href="https://github.com/globocom/thumbor">https://github.com/globocom/thumbor</a>
+.. _Libthumbor: <a href="https://github.com/heynemann/libthumbor">https://github.com/heynemann/libthumbor</a>
+.. _Django-thumbor: <a href="https://django-thumbor.readthedocs.org/en/latest/">https://django-thumbor.readthedocs.org/en/latest/</a></p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>

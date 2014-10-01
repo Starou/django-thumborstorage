@@ -45,7 +45,7 @@ Usage
 settings.py
 '''''''''''
 
-Add ``django-thumborstorage`` in your ``INSTALLED_APPS``.
+Add ``django_thumborstorage`` in your ``INSTALLED_APPS``.
 
 And set the following:
 

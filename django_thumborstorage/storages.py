@@ -8,7 +8,6 @@ from StringIO import StringIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
-from django.utils.http import urlencode
 from . import exceptions
 
 
@@ -117,14 +116,14 @@ class ThumborStorage(Storage):
 
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     """A Storage that fallback on the FileSystemStorage when retrieving the image.
-    
+
     Useful for a parallel run migration strategy.
 
     The use case is :
         1. Your project started with a FileSystemStorage ;
         2. You want to switch to Thumbor to store your images
             without moving all of them at once.
-        
+
     So:
         1. Store the new images on Thumbor ;
         2. continue to serve existing ones from the file system.
@@ -183,7 +182,7 @@ def thumbor_original_exists(url):
     # *without* having to retrieve it.
     try:
         response = requests.get(url)
-    # Happens when trying to get an image when the name in db 
+    # Happens when trying to get an image when the name in db
     # is in a FileSystemStorage form (without the leading slash).
     except LocationParseError:
         return False
@@ -200,6 +199,7 @@ def thumbor_original_exists(url):
 def thumbor_image_url(key):
     crypto = CryptoURL(key=settings.THUMBOR_SECURITY_KEY)
     return "%s%s" % (settings.THUMBOR_SERVER, crypto.generate(image_url=key))
+
 
 def thumbor_original_image_url(name):
     return "%s%s" % (settings.THUMBOR_RW_SERVER, name)

@@ -88,12 +88,17 @@ You can get the Thumbor ``uuid`` from the ``<ImageField>`` instance using:
 
     my_stuff.photo.storage.key(my_stuff.photo.name)
 
-This is useful to `generate_url()` with Django-thumbor_ when original files are stored on Thumbor. Thus,
+This is useful to ``generate_url()`` with Django-thumbor_ when original files are stored on Thumbor. Thus,
 you can pass the key as url parameter.
 
 
 CHANGELOG
 =========
+
+0.91.6
+''''''
+
+* Add ``storages.readonly_to_rw_url()``, a function to convert a read-only thumbor url in a rw url.
 
 0.91.5
 ''''''

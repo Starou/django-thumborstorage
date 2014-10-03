@@ -203,3 +203,12 @@ def thumbor_image_url(key):
 
 def thumbor_original_image_url(name):
     return "%s%s" % (settings.THUMBOR_RW_SERVER, name)
+
+
+## Utils
+
+def readonly_to_rw_url(readonly_url):
+    key = re.match(r"^%s/(?P<secu>[\w\-=]{28})/(?P<key>\w{32})(?:/.*){0,1}$" %
+             re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()["key"]
+    name = "/image/%s" % key
+    return thumbor_original_image_url(name)

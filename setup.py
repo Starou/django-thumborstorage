@@ -8,12 +8,12 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-thumborstorage',
-    version='0.91.5',
+    version='0.91.6',
     license='MIT Licence',
     author='Stanislas Guerra',
     author_email='stanislas.guerra@gmail.com',
     description='Django custom storage for Thumbor backend.',
-    long_description = README,
+    long_description=README,
     url='https://github.com/Starou/django-thumborstorage',
     packages=['django_thumborstorage'],
     package_data={

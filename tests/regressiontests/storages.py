@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 CURRENT_DIR = os.path.abspath(os.path.split(__file__)[0])
 IMAGE_DIR = os.path.join(CURRENT_DIR, "..", "images")
 
+
 class MockedGetResponse:
     status_code = 200
 
@@ -162,6 +163,7 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
         self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
 
+
 class ThumborStorageTest(DjangoThumborTestCase):
     def setUp(self):
         super(ThumborStorageTest, self).setUp()
@@ -288,8 +290,19 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         assert not self.MockGetClass.called, "Should not GET on Thumbor."
 
 
+class UtilsTest(DjangoThumborTestCase):
+    def test_readonly_to_rw_url(self):
+        from django.conf import settings
+        from django_thumborstorage.storages import readonly_to_rw_url
+
+        readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302" % settings.THUMBOR_SERVER
+        self.assertEqual(readonly_to_rw_url(readonly_url),
+                         '%s/image/e8a82fa321e344dfaddcbaa997845302' % settings.THUMBOR_RW_SERVER)
+
+
 def suite():
     suite = unittest.TestLoader().loadTestsFromTestCase(ThumborStorageTest)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ThumborStorageFileTest))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ThumborMigrationStorageTest))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UtilsTest))
     return suite

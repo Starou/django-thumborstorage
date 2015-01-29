@@ -31,8 +31,8 @@ Install
 Dependencies
 ''''''''''''
 
-* Python 2.6 or 2.7
-* Django-1.5.x
+* Python 2.7
+* Django-1.5+
 * Requests_
 * Libthumbor_
 

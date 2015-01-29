@@ -8,6 +8,9 @@ django-thumborstorage
 .. image:: https://pypip.in/v/django-thumborstorage/badge.png
   :target: https://pypi.python.org/pypi/django-thumborstorage
 
+.. image:: https://travis-ci.org/Starou/django-thumborstorage.svg
+    :target: https://travis-ci.org/Starou/django-thumborstorage
+    :alt: Travis C.I.
 
 A Django custom storage for Thumbor backend.
 

@@ -62,6 +62,10 @@ class ThumborStorageFile(ImageFile):
         self.seek(0, os.SEEK_END)
         return self.tell()
 
+    def close(self):
+        self._file = None
+        super(ThumborStorageFile, self).close()
+
 
 class ThumborStorage(Storage):
     """Thumbor Simple Storage Service"""

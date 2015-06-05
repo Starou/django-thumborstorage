@@ -43,7 +43,7 @@ class ThumborStorageFile(ImageFile):
             return
 
     def _get_file(self):
-        if self._file is None:
+        if self._file is None or self._file.closed:
             self._file = StringIO()
             if 'r' in self._mode:
                 url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)

@@ -8,6 +8,7 @@ from StringIO import StringIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
+from django.utils.deconstruct import deconstructible
 from . import exceptions
 
 
@@ -67,6 +68,7 @@ class ThumborStorageFile(ImageFile):
         super(ThumborStorageFile, self).close()
 
 
+@deconstructible
 class ThumborStorage(Storage):
     """Thumbor Simple Storage Service"""
 
@@ -118,6 +120,7 @@ class ThumborStorage(Storage):
     #TODO : get_valid_name(name)
 
 
+@deconstructible
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     """A Storage that fallback on the FileSystemStorage when retrieving the image.
 

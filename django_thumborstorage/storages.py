@@ -4,7 +4,7 @@ import re
 import requests
 from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
-from StringIO import StringIO
+from io import StringIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage

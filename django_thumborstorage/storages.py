@@ -4,7 +4,7 @@ import re
 import requests
 from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
-from StringIO import StringIO
+from io import BytesIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
@@ -31,6 +31,7 @@ class ThumborStorageFile(ImageFile):
         }
         response = requests.post(url, data=image_content, headers=headers)
         self._location = response.headers["location"]
+
         return super(ThumborStorageFile, self).write(image_content)
 
     def delete(self):
@@ -45,7 +46,7 @@ class ThumborStorageFile(ImageFile):
 
     def _get_file(self):
         if self._file is None or self._file.closed:
-            self._file = StringIO()
+            self._file = BytesIO()
             if 'r' in self._mode:
                 url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
                 response = requests.get(url)

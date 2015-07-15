@@ -28,6 +28,12 @@ class ThumborStorageFile(ImageFile):
         image_content = content.file.read()
         content.file.seek(0)
 
+        temp_image_content = image_content
+        try:
+            image_content = image_content.decode(encoding='UTF-8')
+        except:
+            image_content = temp_image_content
+
         url = "%s/image" % settings.THUMBOR_RW_SERVER
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",

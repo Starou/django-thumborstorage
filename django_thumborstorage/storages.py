@@ -216,8 +216,9 @@ def thumbor_original_exists(url):
 # These methods proxiing to these functions.
 
 def thumbor_image_url(key):
-    crypto = CryptoURL(key=settings.THUMBOR_SECURITY_KEY)
-    return "%s%s" % (settings.THUMBOR_SERVER, crypto.generate(image_url=key))
+    sec_key = settings.THUMBOR_SECURITY_KEY
+    url = get_key(key, sec_key).decode('utf-8')
+    return "%s/%s/%s" % (settings.THUMBOR_SERVER, url, key)
 
 
 def thumbor_original_image_url(name):

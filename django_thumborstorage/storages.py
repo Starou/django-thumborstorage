@@ -2,7 +2,9 @@ import mimetypes
 import os
 import re
 import requests
-from libthumbor import CryptoURL
+import base64
+import hmac
+import hashlib
 from requests.packages.urllib3.exceptions import LocationParseError
 try:
     from StringIO import StringIO
@@ -214,6 +216,9 @@ def thumbor_original_exists(url):
 ## These functions because some methods in ThumborStorage may be called with
 #   self being a ThumborMigrationStorage instance and result in infinite loop.
 # These methods proxiing to these functions.
+
+def get_key(url, security_key):
+    return base64.urlsafe_b64encode(hmac.new(security_key, unicode(url).encode('utf-8'), hashlib.sha1).digest())
 
 def thumbor_image_url(key):
     sec_key = settings.THUMBOR_SECURITY_KEY

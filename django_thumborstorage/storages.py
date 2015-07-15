@@ -28,12 +28,6 @@ class ThumborStorageFile(ImageFile):
         image_content = content.file.read()
         content.file.seek(0)
 
-        temp_image_content = image_content
-        try:
-            image_content = image_content.decode(encoding='UTF-8')
-        except:
-            image_content = temp_image_content
-
         url = "%s/image" % settings.THUMBOR_RW_SERVER
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
@@ -41,6 +35,14 @@ class ThumborStorageFile(ImageFile):
         }
         response = requests.post(url, data=image_content, headers=headers)
         self._location = response.headers["location"]
+
+        # Convert image file from bytes to string in python 3
+        temp_image_content = image_content
+        try:
+            image_content = str(image_content)
+        except:
+            image_content = temp_image_content
+
         return super(ThumborStorageFile, self).write(image_content)
 
     def delete(self):

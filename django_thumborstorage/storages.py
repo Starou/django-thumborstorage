@@ -218,7 +218,16 @@ def thumbor_original_exists(url):
 # These methods proxiing to these functions.
 
 def get_key(url, security_key):
-    return base64.urlsafe_b64encode(hmac.new(security_key, unicode(url).encode('utf-8'), hashlib.sha1).digest())
+    try:
+        url = unicode(url).encode('utf-8')
+    except:
+        url = url.encode('utf-8')
+    try:
+        security_key = unicode(security_key).encode('utf-8')
+    except:
+        security_key = security_key.encode('utf-8')
+
+    return base64.urlsafe_b64encode(hmac.new(security_key, url, hashlib.sha1).digest())
 
 def thumbor_image_url(key):
     sec_key = settings.THUMBOR_SECURITY_KEY

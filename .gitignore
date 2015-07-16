@@ -9,3 +9,5 @@ build
 MANIFEST
 *.sqlite
 tests/.coverage
+tests/env
+env

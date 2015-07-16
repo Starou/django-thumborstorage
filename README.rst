@@ -32,9 +32,9 @@ Dependencies
 ''''''''''''
 
 * Python 2.7
+* Python 3.4
 * Django-1.5+
 * Requests_
-* Libthumbor_
 
 Recommended:
 
@@ -97,6 +97,12 @@ you can pass the key as url parameter.
 
 CHANGELOG
 =========
+0.91.9
+''''''
+
+* Add Python 3.4 support
+* Removed Dependency on libthumbor as it is not Python 3.4 compatible
+
 
 0.91.6
 ''''''

@@ -13,3 +13,5 @@ tests/env
 env
 env1
 tests/env1
+env2
+tests/env2

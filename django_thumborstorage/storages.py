@@ -12,8 +12,21 @@ from io import BytesIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
-from django.utils.deconstruct import deconstructible
+
+try:
+    from django.utils.deconstruct import deconstructible
+except:
+    pass
+
 from . import exceptions
+
+
+class backwards_compatible_deconstuctable(object):
+    def __call__(self, func):
+        try:
+            return deconstructible(func)
+        except:
+            return func
 
 
 class ThumborStorageFile(ImageFile):
@@ -73,7 +86,7 @@ class ThumborStorageFile(ImageFile):
         super(ThumborStorageFile, self).close()
 
 
-@deconstructible
+@backwards_compatible_deconstuctable()
 class ThumborStorage(Storage):
     """Thumbor Simple Storage Service"""
 
@@ -125,7 +138,7 @@ class ThumborStorage(Storage):
     #TODO : get_valid_name(name)
 
 
-@deconstructible
+@backwards_compatible_deconstuctable()
 class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     """A Storage that fallback on the FileSystemStorage when retrieving the image.
 

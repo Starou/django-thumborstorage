@@ -6,10 +6,8 @@ import base64
 import hmac
 import hashlib
 from requests.packages.urllib3.exceptions import LocationParseError
-try:
-    from StringIO import StringIO
-except:
-    from io import StringIO
+
+from io import BytesIO
 
 from django.conf import settings
 from django.core.files.images import ImageFile
@@ -38,13 +36,6 @@ class ThumborStorageFile(ImageFile):
         response = requests.post(url, data=image_content, headers=headers)
         self._location = response.headers["location"]
 
-        # Convert image file from bytes to string in python 3
-        temp_image_content = image_content
-        try:
-            image_content = str(image_content)
-        except:
-            image_content = temp_image_content
-
         return super(ThumborStorageFile, self).write(image_content)
 
     def delete(self):
@@ -59,7 +50,7 @@ class ThumborStorageFile(ImageFile):
 
     def _get_file(self):
         if self._file is None or self._file.closed:
-            self._file = StringIO()
+            self._file = BytesIO()
             if 'r' in self._mode:
                 url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
                 response = requests.get(url)

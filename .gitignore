@@ -11,3 +11,5 @@ MANIFEST
 tests/.coverage
 tests/env
 env
+env1
+tests/env1

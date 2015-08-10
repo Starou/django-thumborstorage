@@ -42,6 +42,15 @@ Recommended:
 * Thumbor_
 
 
+Python 3 Users
+''''''''''''''
+
+Python 3 is not officially supported (yet) due to the lack of a Python 3 compatible libthumbor
+release. However Python 3 compatibility can be achieved by installing libthumbor directly from
+the libthumbor github master branch using the command ``pip install git+https://github.com/libthumbor@master``
+before installing django-thumborstorage using ``pip installl django-thumborstorage``.
+
+
 Usage
 =====
 

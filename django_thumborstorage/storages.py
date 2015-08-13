@@ -1,6 +1,7 @@
 import mimetypes
 import os
 import re
+import urllib
 import requests
 from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
@@ -27,10 +28,15 @@ class ThumborStorageFile(ImageFile):
         url = "%s/image" % settings.THUMBOR_RW_SERVER
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
-            "Slug": self.name,
+            "Slug": urllib.quote(
+                self.name.encode('utf-8'), ':/?#[]@!$&\'()*+,;='),
         }
         response = requests.post(url, data=image_content, headers=headers)
-        self._location = response.headers["location"]
+        self._location = urllib.unquote(response.headers["location"])
+        try:
+            self._location = self._location.decode('utf-8')
+        except AttributeError:
+            pass
         return super(ThumborStorageFile, self).write(image_content)
 
     def delete(self):

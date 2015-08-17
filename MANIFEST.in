@@ -1,4 +1,6 @@
-include LICENCE.txt
+include AUTHORS
+include LICENSE
+include MANIFEST.in
 include README.rst
 recursive-include tests *
 recursive-exclude * .DS_Store 

@@ -3,6 +3,7 @@
 import mock
 import os
 import unittest
+import requests
 from django.core.files.base import ContentFile
 
 CURRENT_DIR = os.path.abspath(os.path.split(__file__)[0])
@@ -136,6 +137,19 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
                                               headers={"Content-Type": "image/png", "Slug": filename})
         self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
 
+    def test_write_unicode(self):
+        from django_thumborstorage import storages
+        from django.conf import settings
+        filename = u'foundations/呵呵.png'
+        filename_encoded = 'foundations/%E5%91%B5%E5%91%B5.png'
+        content = ContentFile(open('%s/gnu.png' % IMAGE_DIR).read())
+        thumbor_file = storages.ThumborStorageFile(filename, mode="w")
+        thumbor_file.write(content=content)
+        self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_RW_SERVER,
+                                              data=content.file.read(),
+                                              headers={"Content-Type": "image/png", "Slug": filename_encoded})
+        self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
+
     def test_delete_allowed(self):
         from django_thumborstorage import storages
         from django.conf import settings
@@ -153,7 +167,6 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
     def test_delete_not_allowed(self):
         self.MockDeleteClass.side_effect = mocked_thumbor_delete_not_allowed_response
         from django_thumborstorage import storages
-        from django.conf import settings
         from django_thumborstorage import exceptions
         filename = '/image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
         thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
@@ -177,7 +190,6 @@ class ThumborStorageTest(DjangoThumborTestCase):
                          '%s/qn6d7XNEzldMxgE8t4oVjEbEsDg=/5247a82854384f228c6fba432c67e6a8' % settings.THUMBOR_SERVER)
 
     def test_key(self):
-        from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
@@ -237,12 +249,10 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
                          '%s/qn6d7XNEzldMxgE8t4oVjEbEsDg=/5247a82854384f228c6fba432c67e6a8' % settings.THUMBOR_SERVER)
 
     def test_key_thumbor(self):
-        from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
     def test_path_thumbor(self):
-        from django.conf import settings
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         with self.assertRaises(NotImplementedError):
             self.storage.path(filename)
@@ -266,25 +276,21 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
                          '%simages/people/new/TempletonPeck.jpg' % settings.MEDIA_URL)
 
     def test_key_filesystem(self):
-        from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
         with self.assertRaises(NotImplementedError):
             self.storage.key(filename)
 
     def test_path_filesystem(self):
-        from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.path(filename), '/media/images/people/new/TempletonPeck.jpg')
 
     def test_delete_filesytem(self):
-        from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
         # Note: FileSystemStorage does not raises exception if the file does not exists.
         self.storage.delete(filename)
         assert not self.MockDeleteClass.called, "Should not DELETE on Thumbor."
 
     def test_exists_filesystem(self):
-        from django.conf import settings
         filename = 'images/people/new/TempletonPeck.jpg'
         self.storage.exists(filename)
         assert not self.MockGetClass.called, "Should not GET on Thumbor."
@@ -298,6 +304,21 @@ class UtilsTest(DjangoThumborTestCase):
         readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302" % settings.THUMBOR_SERVER
         self.assertEqual(readonly_to_rw_url(readonly_url),
                          '%s/image/e8a82fa321e344dfaddcbaa997845302' % settings.THUMBOR_RW_SERVER)
+
+    def test_request_with_unicode_name(self):
+        from django_thumborstorage.storages import thumbor_original_image_url
+
+        filename = u'/image/oooooo32chars_random_idooooooooo/foundations/呵呵.png'
+        filename_encoded = '/image/oooooo32chars_random_idooooooooo/foundations/%E5%91%B5%E5%91%B5.png'
+        self.patcher_get.stop()
+        # checks that requests encodes a unicode url as expected
+        with mock.patch('requests.sessions.Session.send') as mocked_send:
+            requests.get(thumbor_original_image_url(filename))
+            [prepared_request], _ = mocked_send.call_args
+            self.assertEqual(
+                prepared_request.url,
+                thumbor_original_image_url(filename_encoded))
+        self.patcher_get.start()
 
 
 def suite():

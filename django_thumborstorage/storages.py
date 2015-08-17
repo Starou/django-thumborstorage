@@ -8,8 +8,13 @@ from StringIO import StringIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
-from django.utils.deconstruct import deconstructible
 from . import exceptions
+
+try:
+    from django.utils.deconstruct import deconstructible
+except ImportError:
+    def deconstructible(cls):
+        return cls
 
 
 class ThumborStorageFile(ImageFile):

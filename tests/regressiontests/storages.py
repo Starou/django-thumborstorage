@@ -142,7 +142,7 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         from django.conf import settings
         filename = u'foundations/呵呵.png'
         filename_encoded = 'foundations/%E5%91%B5%E5%91%B5.png'
-        content = ContentFile(open('%s/gnu.png' % IMAGE_DIR).read())
+        content = ContentFile(open('%s/gnu.png' % IMAGE_DIR, "rb").read())
         thumbor_file = storages.ThumborStorageFile(filename, mode="w")
         thumbor_file.write(content=content)
         self.MockPostClass.assert_called_with("%s/image" % settings.THUMBOR_RW_SERVER,

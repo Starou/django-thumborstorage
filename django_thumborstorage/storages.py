@@ -1,7 +1,6 @@
 import mimetypes
 import os
 import re
-import urllib
 import requests
 from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
@@ -11,6 +10,13 @@ from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
 from . import exceptions
 
+# Python 3
+try:
+    from urllib.parse import quote, unquote
+except ImportError:
+    from urllib import quote, unquote
+
+# Django < 1.7
 try:
     from django.utils.deconstruct import deconstructible
 except ImportError:
@@ -33,11 +39,11 @@ class ThumborStorageFile(ImageFile):
         url = "%s/image" % settings.THUMBOR_RW_SERVER
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
-            "Slug": urllib.quote(
+            "Slug": quote(
                 self.name.encode('utf-8'), ':/?#[]@!$&\'()*+,;='),
         }
         response = requests.post(url, data=image_content, headers=headers)
-        self._location = urllib.unquote(response.headers["location"])
+        self._location = unquote(response.headers["location"])
         try:
             self._location = self._location.decode('utf-8')
         except AttributeError:

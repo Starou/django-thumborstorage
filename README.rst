@@ -5,7 +5,7 @@ django-thumborstorage
 .. image:: https://coveralls.io/repos/Starou/django-thumborstorage/badge.png?branch=master
   :target: https://coveralls.io/r/Starou/django-thumborstorage?branch=master
 
-.. image:: https://pypip.in/v/django-thumborstorage/badge.png
+.. image:: https://img.shields.io/pypi/v/django-thumborstorage.svg
   :target: https://pypi.python.org/pypi/django-thumborstorage
 
 .. image:: https://travis-ci.org/Starou/django-thumborstorage.svg

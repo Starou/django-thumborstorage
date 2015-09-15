@@ -107,6 +107,13 @@ you can pass the key as url parameter.
 CHANGELOG
 =========
 
+0.92.0
+''''''
+
+* Added experimental Python 3.4 support (Thanks to *Charlie 123*.)
+* Fixed broken support for Django < 1.7 (Thanks to *Rizziepit*.)
+* Added unicode support in file names (Thanks to *Rizziepit*.)
+
 0.91.6
 ''''''
 

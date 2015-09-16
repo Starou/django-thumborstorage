@@ -12,8 +12,7 @@ env:
 
 install:
   - pip install -q Django==$DJANGO_VERSION
-  - pip install coverage coveralls mock requests
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install git+https://github.com/thumbor/libthumbor@master; else pip install -q libthumbor; fi
+  - pip install coverage coveralls libthumbor mock requests
   - pip install .
 
 before_script: cd tests

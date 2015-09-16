@@ -19,14 +19,12 @@ is a storage you can use for ``Imagefield`` initialy using a ``FileSystemStorage
 to migrate to Thumbor without batch-moving all of them. That way, Django continues to serve
 them from the file system until you change the image on that field.
 
-
 Install
 =======
 
 ::
 
     pip install django-thumborstorage
-
 
 Dependencies
 ''''''''''''
@@ -40,16 +38,6 @@ Recommended:
 
 * Django-thumbor_ (to manage thumbnails).
 * Thumbor_
-
-
-Python 3 Users
-''''''''''''''
-
-Python 3 is not officially supported (yet) due to the lack of a Python 3 compatible libthumbor
-release. However Python 3 compatibility can be achieved by installing libthumbor directly from
-the libthumbor github master branch using the command ``pip install git+https://github.com/libthumbor@master``
-before installing django-thumborstorage using ``pip installl django-thumborstorage``.
-
 
 Usage
 =====
@@ -68,8 +56,6 @@ And set the following:
     # This may be a different host than THUMBOR_SERVER
     # only reachable by your Django server.
     THUMBOR_RW_SERVER = 'http://localhost:8888'
-
-
 
 models.py
 '''''''''
@@ -90,7 +76,6 @@ Just set the ``storage`` parameter in the ImageField you want to manage with Thu
         photo_height = models.IntegerField(blank=True, null=True)
         photo_width = models.IntegerField(blank=True, null=True)
 
-
 In the code
 '''''''''''
 
@@ -102,7 +87,6 @@ You can get the Thumbor ``uuid`` from the ``<ImageField>`` instance using:
 
 This is useful to ``generate_url()`` with Django-thumbor_ when original files are stored on Thumbor. Thus,
 you can pass the key as url parameter.
-
 
 CHANGELOG
 =========
@@ -129,12 +113,10 @@ Backward imcompatibilities
 
 * ``THUMBOR_SERVER`` and ``THUMBOR_SECURITY_KEY`` are required in settings.
 
-
 0.91.4
 ''''''
 
 * Add ``ThumborStorage.key(name)`` to retrieve the Thumbor uuid from the name.
-
 
 0.91.3
 ''''''
@@ -144,8 +126,6 @@ Backward imcompatibilities
 
 * ``THUMBOR_WRITABLE_SERVER`` setting is replaced by ``THUMBOR_RW_SERVER`` since it is now used to retrieve the
   original file.
-
-
 
 TODO
 ====

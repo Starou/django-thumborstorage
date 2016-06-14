@@ -43,6 +43,8 @@ class ThumborStorageFile(ImageFile):
                 self.name.encode('utf-8'), ':/?#[]@!$&\'()*+,;='),
         }
         response = requests.post(url, data=image_content, headers=headers)
+        if response.status_code != 201:
+            raise exceptions.ThumborPostException(response)
         self._location = unquote(response.headers["location"])
         try:
             self._location = self._location.decode('utf-8')
@@ -134,7 +136,7 @@ class ThumborStorage(Storage):
         # https://github.com/globocom/thumbor/blob/ae9a150e8a2b771dd49b4137186e9fdfbea09733/thumbor/handlers/images.py#L51
         return name
 
-    #TODO : get_valid_name(name)
+    # TODO : get_valid_name(name)
 
 
 @deconstructible
@@ -216,8 +218,8 @@ def thumbor_original_exists(url):
         return False
 
 
-## These functions because some methods in ThumborStorage may be called with
-#   self being a ThumborMigrationStorage instance and result in infinite loop.
+# These functions because some methods in ThumborStorage may be called with
+# self being a ThumborMigrationStorage instance and result in infinite loop.
 # These methods proxiing to these functions.
 
 def thumbor_image_url(key):
@@ -229,10 +231,10 @@ def thumbor_original_image_url(name):
     return "%s%s" % (settings.THUMBOR_RW_SERVER, name)
 
 
-## Utils
+# Utils
 
 def readonly_to_rw_url(readonly_url):
     key = re.match(r"^%s/(?P<secu>[\w\-=]{28})/(?P<key>\w{32})(?:/.*){0,1}$" %
-             re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()["key"]
+                   re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()["key"]
     name = "/image/%s" % key
     return thumbor_original_image_url(name)

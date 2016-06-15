@@ -16,5 +16,5 @@ class ThumborPostException(DjangoThumborStorageException):
     def __init__(self, response):
         self._error = "%d - %s" % (response.status_code, response.reason)
 
-    def __repr__(self):
-        print(self._error)
+    def __str__(self):
+        return repr(self._error)

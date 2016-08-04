@@ -91,6 +91,11 @@ you can pass the key as url parameter.
 CHANGELOG
 =========
 
+0.92.1
+''''''
+
+* Handle status code of the Thumbor server response when posting an image.
+
 0.92.0
 ''''''
 

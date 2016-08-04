@@ -15,7 +15,7 @@ class MockedGetResponse:
 
     def __init__(self, url):
         """Retrieve the file on the filesytem according to the name. """
-        #TODO: catch LocationParseError.
+        # TODO: catch LocationParseError.
         basename = os.path.basename(url)
         filename = os.path.join(IMAGE_DIR, basename)
         if not os.path.exists(filename):
@@ -30,11 +30,16 @@ def mocked_thumbor_get_response(url):
 
 
 class MockedPostResponse:
+    status_code = 201
     headers = {}
 
 
 def mocked_thumbor_post_response(url, data, headers):
     response = MockedPostResponse()
+    if len(data) < 10000:
+        response.status_code = 412
+        response.reason = "Image too small"
+        return response
     response.headers["location"] = "/image/oooooo32chars_random_idooooooooo/%s" % headers["Slug"]
     return response
 
@@ -136,6 +141,14 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/png", "Slug": filename})
         self.assertEqual(thumbor_file._location, '/image/oooooo32chars_random_idooooooooo/%s' % filename)
+
+    def test_write_image_too_small(self):
+        from django_thumborstorage import storages
+        from django_thumborstorage import exceptions
+        filename = 'beasts/bouboune.png'
+        content = ContentFile(open('%s/bouboune.png' % IMAGE_DIR, "rb").read())
+        thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
+        self.assertRaises(exceptions.ThumborPostException, thumbor_file.write, content=content)
 
     def test_write_unicode(self):
         from django_thumborstorage import storages

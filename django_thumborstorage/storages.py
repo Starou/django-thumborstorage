@@ -83,8 +83,8 @@ class ThumborStorageFile(ImageFile):
         return self.tell()
 
     def close(self):
-        self._file = None
         super(ThumborStorageFile, self).close()
+        self._file = None
 
 
 @deconstructible

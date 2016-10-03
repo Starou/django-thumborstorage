@@ -318,6 +318,14 @@ class UtilsTest(DjangoThumborTestCase):
         self.assertEqual(readonly_to_rw_url(readonly_url),
                          '%s/image/e8a82fa321e344dfaddcbaa997845302' % settings.THUMBOR_RW_SERVER)
 
+        readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302.jpg" % settings.THUMBOR_SERVER
+        self.assertEqual(readonly_to_rw_url(readonly_url),
+                         '%s/image/e8a82fa321e344dfaddcbaa997845302.jpg' % settings.THUMBOR_RW_SERVER)
+
+        readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302/foo.jpg" % settings.THUMBOR_SERVER
+        self.assertEqual(readonly_to_rw_url(readonly_url),
+                         '%s/image/e8a82fa321e344dfaddcbaa997845302/foo.jpg' % settings.THUMBOR_RW_SERVER)
+
     def test_request_with_unicode_name(self):
         from django_thumborstorage.storages import thumbor_original_image_url
 

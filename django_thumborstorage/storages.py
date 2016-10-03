@@ -200,7 +200,8 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
     def is_thumbor(self, name):
-        return re.match(r"^/image/\w{32}(?:/.*){0,1}$", name)
+        # match 'key', 'key/filename.ext' and 'key.ext'.
+        return re.match(r"^/image/\w{32}(?:(/|\.).*){0,1}$", name)
 
 
 def thumbor_original_exists(url):

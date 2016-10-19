@@ -91,6 +91,11 @@ you can pass the key as url parameter.
 CHANGELOG
 =========
 
+0.92.2
+''''''
+
+* Fix ``readonly_to_rw_url()`` to manage suffix in the urls.
+
 0.92.1
 ''''''
 

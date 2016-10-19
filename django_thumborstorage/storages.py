@@ -24,6 +24,10 @@ except ImportError:
         return cls
 
 
+# Match 'key', 'key/filename.ext' and 'key.ext'.
+THUMBOR_PATH_PATTERN = r"^/image/(?P<key>\w{32})(?:(/|\.).*){0,1}$"
+
+
 class ThumborStorageFile(ImageFile):
     def __init__(self, name, mode):
         self.name = name
@@ -113,7 +117,7 @@ class ThumborStorage(Storage):
 
     def exists(self, name):
         # name is the location returned by Thumbor when posted > may exists.
-        if re.match(r"^/image/\w{32}(?:/.*){0,1}$", name):
+        if re.match(THUMBOR_PATH_PATTERN, name):
             return thumbor_original_exists(thumbor_original_image_url(name))
         # name as defined in 'upload_to' > new image.
         else:
@@ -127,7 +131,7 @@ class ThumborStorage(Storage):
         return thumbor_image_url(self.key(name))
 
     def key(self, name):
-        return re.match(r"^/image/(?P<key>\w{32})(?:/.*){0,1}$", name).groupdict()['key']
+        return re.match(THUMBOR_PATH_PATTERN, name).groupdict()['key']
 
     def get_available_name(self, name):
         # There is no way to know if the image exists on Thumbor.
@@ -200,7 +204,7 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
             return FileSystemStorage.path(self, name)
 
     def is_thumbor(self, name):
-        return re.match(r"^/image/\w{32}(?:/.*){0,1}$", name)
+        return re.match(THUMBOR_PATH_PATTERN, name)
 
 
 def thumbor_original_exists(url):
@@ -234,7 +238,7 @@ def thumbor_original_image_url(name):
 # Utils
 
 def readonly_to_rw_url(readonly_url):
-    key = re.match(r"^%s/(?P<secu>[\w\-=]{28})/(?P<key>\w{32})(?:/.*){0,1}$" %
-                   re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()["key"]
-    name = "/image/%s" % key
+    matches = re.match(r"^%s/(?P<secu>[\w\-=]{28})/(?P<key>\w{32})(?P<extra>(?:.*))$" %
+                       re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()
+    name = "/image/%s%s" % (matches["key"], matches["extra"])
     return thumbor_original_image_url(name)

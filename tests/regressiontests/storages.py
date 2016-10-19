@@ -252,6 +252,7 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
     def test_is_thumbor(self):
         self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'))
         self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8'))
+        self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8.jpg'))
         self.assertFalse(self.storage.is_thumbor('images/people/new/TempletonPeck.jpg'))
         self.assertFalse(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8BlahBlahBlah'))
 
@@ -317,6 +318,14 @@ class UtilsTest(DjangoThumborTestCase):
         readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302" % settings.THUMBOR_SERVER
         self.assertEqual(readonly_to_rw_url(readonly_url),
                          '%s/image/e8a82fa321e344dfaddcbaa997845302' % settings.THUMBOR_RW_SERVER)
+
+        readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302.jpg" % settings.THUMBOR_SERVER
+        self.assertEqual(readonly_to_rw_url(readonly_url),
+                         '%s/image/e8a82fa321e344dfaddcbaa997845302.jpg' % settings.THUMBOR_RW_SERVER)
+
+        readonly_url = "%s/a3JtvxkedrrhuuCZo39Sxe0aTYY=/e8a82fa321e344dfaddcbaa997845302/foo.jpg" % settings.THUMBOR_SERVER
+        self.assertEqual(readonly_to_rw_url(readonly_url),
+                         '%s/image/e8a82fa321e344dfaddcbaa997845302/foo.jpg' % settings.THUMBOR_RW_SERVER)
 
     def test_request_with_unicode_name(self):
         from django_thumborstorage.storages import thumbor_original_image_url

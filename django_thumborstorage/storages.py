@@ -133,7 +133,7 @@ class ThumborStorage(Storage):
     def key(self, name):
         return re.match(THUMBOR_PATH_PATTERN, name).groupdict()['key']
 
-    def get_available_name(self, name):
+    def get_available_name(self, name, max_length=None):
         # There is no way to know if the image exists on Thumbor.
         # When posting a new original image, Thumbor generate a ramdom unique id as key.
         # http://en.wikipedia.org/wiki/Universally_unique_identifier

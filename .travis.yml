@@ -8,7 +8,8 @@ env:
   - DJANGO_VERSION=1.5.12
   - DJANGO_VERSION=1.6.10
   - DJANGO_VERSION=1.7.4
-  - DJANGO_VERSION=1.8.2
+  - DJANGO_VERSION=1.8.17
+  - DJANGO_VERSION=1.9.12
 
 install:
   - pip install -q Django==$DJANGO_VERSION

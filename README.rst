@@ -30,7 +30,8 @@ Dependencies
 ''''''''''''
 
 * Python 2.7
-* Django-1.5+
+* Python 3.5+
+* Django 1.11
 * Requests_
 * Libthumbor_
 

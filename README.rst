@@ -92,6 +92,13 @@ you can pass the key as url parameter.
 CHANGELOG
 =========
 
+1.11.0
+''''''
+
+* Drop support for Django < 1.11 and Python 3.4.
+* Remove ``mock`` from dependencies.
+
+
 0.92.2
 ''''''
 

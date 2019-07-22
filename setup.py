@@ -12,7 +12,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-thumborstorage',
-    version='1.11.0',
+    version='1.12.0',
     license='MIT Licence',
     author='Stanislas Guerra',
     author_email='stanislas.guerra@gmail.com',
@@ -23,10 +23,8 @@ setup(
         'Source Code': 'https://github.com/Starou/django-thumborstorage',
         'Issue Tracker': 'https://github.com/Starou/django-thumborstorage/issues',
     },
+    install_requires=['requests', 'libthumbor'],
     packages=['django_thumborstorage'],
-    package_data={
-        'django_yaaac': []
-    },
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -42,5 +40,4 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    install_requires=['requests', 'libthumbor'],
 )

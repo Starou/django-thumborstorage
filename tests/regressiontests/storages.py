@@ -102,6 +102,13 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         thumbor_file.file
         self.MockGetClass.assert_called_with("%s%s" % (settings.THUMBOR_RW_SERVER, filename))
 
+    def test_get_file_post_django_3_2_11(self):
+        # See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        thumbor_file = storages.ThumborStorageFile(filename, mode='rb')
+        thumbor_file.file
+        self.MockGetClass.assert_called_with("%s/%s" % (settings.THUMBOR_RW_SERVER, filename))
+
     def test_size(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         thumbor_file = storages.ThumborStorageFile(filename, mode='rb')
@@ -109,11 +116,27 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         self.MockGetClass.assert_called_with(f'{settings.THUMBOR_RW_SERVER}{filename}')
         self.assertEqual(size, 9730)
 
+    def test_size_post_django_3_2_11(self):
+        # See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        thumbor_file = storages.ThumborStorageFile(filename, mode='rb')
+        size = thumbor_file.size
+        self.MockGetClass.assert_called_with(f'{settings.THUMBOR_RW_SERVER}/{filename}')
+        self.assertEqual(size, 9730)
+
     def test_read(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         thumbor_file = storages.ThumborStorageFile(filename, mode='rb')
         content = thumbor_file.read()
         self.MockGetClass.assert_called_with(f'{settings.THUMBOR_RW_SERVER}{filename}')
+        self.assertEqual(len(content), 9730)
+
+    def test_read_post_django_3_2_11(self):
+        # See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        thumbor_file = storages.ThumborStorageFile(filename, mode='rb')
+        content = thumbor_file.read()
+        self.MockGetClass.assert_called_with(f'{settings.THUMBOR_RW_SERVER}/{filename}')
         self.assertEqual(len(content), 9730)
 
     def test_write_jpeg(self):
@@ -164,6 +187,18 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
         self.assertRaises(exceptions.NotFoundException, thumbor_file.delete)
 
+    def test_delete_allowed_post_django_3_2_11(self):
+        # See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        filename = 'image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
+        thumbor_file.delete()
+        self.MockDeleteClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}/{filename}")
+        # TODO test status_code == 204 (how ?)
+
+        filename = '/image/oooooo32chars_random_idooooooooo/does_not_exists.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
+        self.assertRaises(exceptions.NotFoundException, thumbor_file.delete)
+
     def test_delete_not_allowed(self):
         self.MockDeleteClass.side_effect = mocked_thumbor_delete_not_allowed_response
         filename = '/image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
@@ -171,6 +206,17 @@ class ThumborStorageFileTest(DjangoThumborTestCase):
         self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
 
         filename = '/image/oooooo32chars_random_idooooooooo/does_not_exists.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
+        self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
+
+    def test_delete_not_allowed_post_django_3_2_11(self):
+        # See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        self.MockDeleteClass.side_effect = mocked_thumbor_delete_not_allowed_response
+        filename = 'image/oooooo32chars_random_idooooooooo/foundations/gnu.png'
+        thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
+        self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
+
+        filename = '/mage/oooooo32chars_random_idooooooooo/does_not_exists.png'
         thumbor_file = storages.ThumborStorageFile(filename, mode="wb")
         self.assertRaises(exceptions.MethodNotAllowedException, thumbor_file.delete)
 
@@ -185,11 +231,23 @@ class ThumborStorageTest(DjangoThumborTestCase):
         self.assertEqual(self.storage.url(filename),
                          f'{settings.THUMBOR_SERVER}/qn6d7XNEzldMxgE8t4oVjEbEsDg=/5247a82854384f228c6fba432c67e6a8')
 
+    def test_url_post_django_3_2_11(self):
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertEqual(self.storage.url(filename),
+                         f'{settings.THUMBOR_SERVER}/qn6d7XNEzldMxgE8t4oVjEbEsDg=/5247a82854384f228c6fba432c67e6a8')
+
     def test_key(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
         filename = '/image/5247a82854384f228c6fba432c67e6a8'
+        self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
+
+    def test_key_post_django_3_2_11(self):
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
+
+        filename = 'image/5247a82854384f228c6fba432c67e6a8'
         self.assertEqual(self.storage.key(filename), '5247a82854384f228c6fba432c67e6a8')
 
     def test_size(self):
@@ -205,18 +263,32 @@ class ThumborStorageTest(DjangoThumborTestCase):
         self.MockPostClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}/image",
                                               data=content.file.read(),
                                               headers={"Content-Type": "image/jpeg", "Slug": filename})
-        self.assertEqual(response, f'/image/oooooo32chars_random_idooooooooo/{filename}')
+        self.assertEqual(response, f'image/oooooo32chars_random_idooooooooo/{filename}')
 
     def test_delete(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.storage.delete(filename)
         self.MockDeleteClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}{filename}")
 
+    def test_delete_post_django_3_2_11(self):
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.storage.delete(filename)
+        self.MockDeleteClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}/{filename}")
+
     def test_exists(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
         self.assertTrue(self.storage.exists(filename))
         self.MockGetClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}{filename}")
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/DoesNoyExists.jpg'
+        self.assertFalse(self.storage.exists(filename))
+        filename = 'people/new/TempletonPeck.jpg'
+        self.assertFalse(self.storage.exists(filename))
+
+    def test_exists_post_django_3_2_11(self):
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'
+        self.assertTrue(self.storage.exists(filename))
+        self.MockGetClass.assert_called_with(f"{settings.THUMBOR_RW_SERVER}/{filename}")
+        filename = 'image/5247a82854384f228c6fba432c67e6a8/people/new/DoesNoyExists.jpg'
         self.assertFalse(self.storage.exists(filename))
         filename = 'people/new/TempletonPeck.jpg'
         self.assertFalse(self.storage.exists(filename))
@@ -233,6 +305,13 @@ class ThumborMigrationStorageTest(DjangoThumborTestCase):
         self.assertTrue(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8.jpg'))
         self.assertFalse(self.storage.is_thumbor('images/people/new/TempletonPeck.jpg'))
         self.assertFalse(self.storage.is_thumbor('/image/5247a82854384f228c6fba432c67e6a8BlahBlahBlah'))
+
+    def test_is_thumbor_post_django_3_2_11(self):
+        self.assertTrue(self.storage.is_thumbor('image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'))
+        self.assertTrue(self.storage.is_thumbor('image/5247a82854384f228c6fba432c67e6a8'))
+        self.assertTrue(self.storage.is_thumbor('image/5247a82854384f228c6fba432c67e6a8.jpg'))
+        self.assertFalse(self.storage.is_thumbor('images/people/new/TempletonPeck.jpg'))
+        self.assertFalse(self.storage.is_thumbor('image/5247a82854384f228c6fba432c67e6a8BlahBlahBlah'))
 
     def test_url_thumbor(self):
         filename = '/image/5247a82854384f228c6fba432c67e6a8/people/new/TempletonPeck.jpg'

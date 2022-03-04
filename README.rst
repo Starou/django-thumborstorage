@@ -28,7 +28,7 @@ Dependencies
 ''''''''''''
 
 * Python 3.6+
-* Django 2.1 to 3.1
+* Django 2.1 to 3.2
 * Requests_
 * Libthumbor_
 
@@ -88,6 +88,24 @@ you can pass the key as url parameter.
 
 CHANGELOG
 =========
+
+2.0.0
+'''''
+
+* Add support for Django 3.2.
+
+Possible breaking change
+------------------------
+
+The leading ``/`` in the path of the file stored in the database has been removed
+due to a breaking change introduced un Django 3.2.11.
+
+https://docs.djangoproject.com/en/4.0/releases/3.2.11/#cve-2021-45452-potential-directory-traversal-via-storage-save
+
+That release handle seamlessly both pre-2.0.0 style (*/image/...*) and
+post-2.0.0 style paths (*image/...*) so there is not need to migrate your database
+to replace */image/...* with *image/...*.
+
 
 1.13.0
 ''''''

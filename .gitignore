@@ -7,4 +7,5 @@ build
 MANIFEST
 *.sqlite
 tests/.coverage
+tests/coverage.lcov
 django_thumborstorage.egg-info

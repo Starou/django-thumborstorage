@@ -1,27 +1,19 @@
 import mimetypes
 import os
 import re
+
+from io import BytesIO
+from urllib.parse import quote, unquote
+
 import requests
+
 from libthumbor import CryptoURL
 from requests.packages.urllib3.exceptions import LocationParseError
-from io import BytesIO
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.core.files.storage import Storage, FileSystemStorage
+from django.utils.deconstruct import deconstructible
 from . import exceptions
-
-# Python 3
-try:
-    from urllib.parse import quote, unquote
-except ImportError:
-    from urllib import quote, unquote
-
-# Django < 1.7
-try:
-    from django.utils.deconstruct import deconstructible
-except ImportError:
-    def deconstructible(cls):
-        return cls
 
 
 # Match 'key', 'key/filename.ext' and 'key.ext'.
@@ -40,7 +32,7 @@ class ThumborStorageFile(ImageFile):
         image_content = content.file.read()
         content.file.seek(0)
 
-        url = "%s/image" % settings.THUMBOR_RW_SERVER
+        url = f"{settings.THUMBOR_RW_SERVER}/image"
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
             "Slug": quote(
@@ -54,23 +46,23 @@ class ThumborStorageFile(ImageFile):
             self._location = self._location.decode('utf-8')
         except AttributeError:
             pass
-        return super(ThumborStorageFile, self).write(image_content)
+        return super().write(image_content)
 
     def delete(self):
-        url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
+        url = f"{settings.THUMBOR_RW_SERVER}{self.name}"
         response = requests.delete(url)
         if response.status_code == 405:
             raise exceptions.MethodNotAllowedException
-        elif response.status_code == 404:
+        if response.status_code == 404:
             raise exceptions.NotFoundException
-        elif response.status_code == 204:
+        if response.status_code == 204:
             return
 
     def _get_file(self):
         if self._file is None or self._file.closed:
             self._file = BytesIO()
             if 'r' in self._mode:
-                url = "%s%s" % (settings.THUMBOR_RW_SERVER, self.name)
+                url = f"{settings.THUMBOR_RW_SERVER}{self.name}"
                 response = requests.get(url)
                 self._file.write(response.content)
                 self._file.seek(0)
@@ -87,7 +79,7 @@ class ThumborStorageFile(ImageFile):
         return self.tell()
 
     def close(self):
-        super(ThumborStorageFile, self).close()
+        super().close()
         self._file = None
 
 
@@ -120,8 +112,7 @@ class ThumborStorage(Storage):
         if re.match(THUMBOR_PATH_PATTERN, name):
             return thumbor_original_exists(thumbor_original_image_url(name))
         # name as defined in 'upload_to' > new image.
-        else:
-            return False
+        return False
 
     def size(self, name):
         f = self.open(name)
@@ -170,38 +161,32 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     def _open(self, name, mode='rb'):
         if self.is_thumbor(name):
             return ThumborStorage._open(self, name, mode)
-        else:
-            return FileSystemStorage._open(self, name, mode)
+        return FileSystemStorage._open(self, name, mode)
 
     def delete(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.delete(self, name)
-        else:
-            return FileSystemStorage.delete(self, name)
+        return FileSystemStorage.delete(self, name)
 
     def exists(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.exists(self, name)
-        else:
-            return FileSystemStorage.exists(self, name)
+        return FileSystemStorage.exists(self, name)
 
     def url(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.url(self, name)
-        else:
-            return FileSystemStorage.url(self, name)
+        return FileSystemStorage.url(self, name)
 
     def key(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.key(self, name)
-        else:
-            raise NotImplementedError
+        raise NotImplementedError
 
     def path(self, name):
         if self.is_thumbor(name):
             return ThumborStorage.path(self, name)
-        else:
-            return FileSystemStorage.path(self, name)
+        return FileSystemStorage.path(self, name)
 
     def is_thumbor(self, name):
         return re.match(THUMBOR_PATH_PATTERN, name)
@@ -218,8 +203,7 @@ def thumbor_original_exists(url):
         return False
     if response.status_code == 200:
         return True
-    else:
-        return False
+    return False
 
 
 # These functions because some methods in ThumborStorage may be called with
@@ -228,11 +212,11 @@ def thumbor_original_exists(url):
 
 def thumbor_image_url(key):
     crypto = CryptoURL(key=settings.THUMBOR_SECURITY_KEY)
-    return "%s%s" % (settings.THUMBOR_SERVER, crypto.generate(image_url=key))
+    return f"{settings.THUMBOR_SERVER}{crypto.generate(image_url=key)}"
 
 
 def thumbor_original_image_url(name):
-    return "%s%s" % (settings.THUMBOR_RW_SERVER, name)
+    return f"{settings.THUMBOR_RW_SERVER}{name}"
 
 
 # Utils
@@ -240,5 +224,5 @@ def thumbor_original_image_url(name):
 def readonly_to_rw_url(readonly_url):
     matches = re.match(r"^%s/(?P<secu>[\w\-=]{28})/(?P<key>\w{32})(?P<extra>(?:.*))$" %
                        re.escape(settings.THUMBOR_SERVER), readonly_url).groupdict()
-    name = "/image/%s%s" % (matches["key"], matches["extra"])
+    name = f"/image/{matches['key']}{matches['extra']}"
     return thumbor_original_image_url(name)

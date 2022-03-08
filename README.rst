@@ -8,12 +8,14 @@ django-thumborstorage
 .. image:: https://img.shields.io/pypi/v/django-thumborstorage.svg
   :target: https://pypi.python.org/pypi/django-thumborstorage
 
-A Django custom storage for Thumbor backend.
+A Django custom storage for Thumbor.
 
-This app provide 2 classes ``ThumborStorage`` and ``ThumborMigrationStorage``. The last one
-is a storage you can use for ``Imagefield`` initialy using a ``FileSystemStorage`` you want
-to migrate to Thumbor without batch-moving all of them. That way, Django continues to serve
-them from the file system until you change the image on that field.
+Provides 2 custom storages classes: ``ThumborStorage`` and ``ThumborMigrationStorage``.
+
+Use ``ThumborMigrationStorage`` on an ``Imagefield`` that started with a classic
+``FileSystemStorage`` you want to upgrade to Thumbor without migrating your old
+media. That way, Django continues to serve them from the file system until the
+image is changed.
 
 Install
 =======
@@ -25,9 +27,8 @@ Install
 Dependencies
 ''''''''''''
 
-* Python 2.7
-* Python 3.5+
-* Django 1.11
+* Python 3.6+
+* Django 2.1 to 3.1
 * Requests_
 * Libthumbor_
 
@@ -42,17 +43,17 @@ Usage
 settings.py
 '''''''''''
 
-Add ``django_thumborstorage`` in your ``INSTALLED_APPS``.
+Add ``django_thumborstorage`` in ``INSTALLED_APPS``.
 
-And set the following:
+And set the following with your values:
 
 .. code-block:: python
 
-    THUMBOR_SERVER = 'http://localhost:8888'
+    THUMBOR_SERVER = 'https://my.thumbor.server.com:8888'
     THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
     # This may be a different host than THUMBOR_SERVER
     # only reachable by your Django server.
-    THUMBOR_RW_SERVER = 'http://localhost:8888'
+    THUMBOR_RW_SERVER = 'https://my.rw.thumbor.server.local:8888'
 
 models.py
 '''''''''
@@ -87,6 +88,13 @@ you can pass the key as url parameter.
 
 CHANGELOG
 =========
+
+1.13.0
+''''''
+
+* Drop support for Django < 2.1 and Python 2.7, 3.4 and 3.5
+* Use GitHub actions for CI instead of Travis.
+
 
 1.11.0
 ''''''

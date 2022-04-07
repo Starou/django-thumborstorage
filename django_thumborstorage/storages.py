@@ -17,7 +17,10 @@ from . import exceptions
 
 
 # Match 'key', 'key/filename.ext' and 'key.ext'.
-THUMBOR_PATH_PATTERN = r"^/image/(?P<key>\w{32})(?:(/|\.).*){0,1}$"
+# Backward-compatibility with the breaking change in Django 3.2.11.
+# We can have pre-Django-3.2.11 path in the database that still start with '/'.
+# https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+THUMBOR_PATH_PATTERN = r"^/?image/(?P<key>\w{32})(?:(/|\.).*){0,1}$"
 
 
 class ThumborStorageFile(ImageFile):
@@ -35,8 +38,7 @@ class ThumborStorageFile(ImageFile):
         url = f"{settings.THUMBOR_RW_SERVER}/image"
         headers = {
             "Content-Type": mimetypes.guess_type(self.name)[0] or "image/jpeg",
-            "Slug": quote(
-                self.name.encode('utf-8'), ':/?#[]@!$&\'()*+,;='),
+            "Slug": quote(self.name.encode('utf-8'), ':/?#[]@!$&\'()*+,;='),
         }
         response = requests.post(url, data=image_content, headers=headers)
         if response.status_code != 201:
@@ -49,7 +51,7 @@ class ThumborStorageFile(ImageFile):
         return super().write(image_content)
 
     def delete(self):
-        url = f"{settings.THUMBOR_RW_SERVER}{self.name}"
+        url = f"{settings.THUMBOR_RW_SERVER}{self.get_location()}"
         response = requests.delete(url)
         if response.status_code == 405:
             raise exceptions.MethodNotAllowedException
@@ -62,7 +64,7 @@ class ThumborStorageFile(ImageFile):
         if self._file is None or self._file.closed:
             self._file = BytesIO()
             if 'r' in self._mode:
-                url = f"{settings.THUMBOR_RW_SERVER}{self.name}"
+                url = f"{settings.THUMBOR_RW_SERVER}{self.get_location()}"
                 response = requests.get(url)
                 self._file.write(response.content)
                 self._file.seek(0)
@@ -72,6 +74,19 @@ class ThumborStorageFile(ImageFile):
         self._file = value
 
     file = property(_get_file, _set_file)
+
+    def get_location(self):
+        """ Django 3.2.11 introduced a backward-incompatible change.
+
+        See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        This function manage both pre and post Django 3.2.11 name in the database (with
+        and without a '/' at the start of the string.
+        """
+        location = self.name
+        if not location[0] == '/':
+            location = '/' + location
+        return location
+
 
     @property
     def size(self):
@@ -98,7 +113,10 @@ class ThumborStorage(Storage):
         name = self._normalize_name(name)
         f = ThumborStorageFile(name, mode="w")
         f.write(content=content)
-        return f._location
+        # The '/' at the beginning of the 'name' save in the db is no more allowed
+        # since Django 3.2.11.
+        # https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+        return f._location[1:]
 
     def _normalize_name(self, name):
         return name
@@ -216,6 +234,14 @@ def thumbor_image_url(key):
 
 
 def thumbor_original_image_url(name):
+    """ Django 3.2.11 introduced a backward-incompatible change.
+
+    See https://github.com/django/django/commit/6d343d01c57eb03ca1c6826318b652709e58a76e
+    This function manage both pre and post Django 3.2.11 name in the database (with
+    and without a '/' at the start of the string.
+    """
+    if not name[0] == '/':
+        name = '/' + name
     return f"{settings.THUMBOR_RW_SERVER}{name}"
 
 

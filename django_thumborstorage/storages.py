@@ -179,7 +179,7 @@ class ThumborMigrationStorage(ThumborStorage, FileSystemStorage):
     def _open(self, name, mode='rb'):
         if self.is_thumbor(name):
             return ThumborStorage._open(self, name, mode)
-        return FileSystemStorage._open(self, name, mode)
+        return ImageFile(FileSystemStorage._open(self, name, mode))
 
     def delete(self, name):
         if self.is_thumbor(name):
